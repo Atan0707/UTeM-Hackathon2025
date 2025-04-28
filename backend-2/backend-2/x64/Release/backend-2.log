@@ -1,0 +1,2 @@
+﻿  main.cpp
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\main.cpp(2,10): error C1083: Cannot open include file: 'mysql_driver.h': No such file or directory
