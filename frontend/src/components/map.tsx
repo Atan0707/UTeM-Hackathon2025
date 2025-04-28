@@ -36,7 +36,6 @@ export default function Map({
   const [dialogLocation, setDialogLocation] = useState<LocationUI | null>(null);
   const locationRequestedRef = useRef(false);
 
-  // Function to navigate to a location when card is clicked
   const navigateToLocation = useCallback((location: LocationUI) => {
     if (!map.current || !isMapInitialized) return;
     
@@ -46,7 +45,10 @@ export default function Map({
 
     // Close any open popups first to avoid visual glitches
     if (selectedLocation && locationMarkers.current[selectedLocation]) {
-      locationMarkers.current[selectedLocation].getPopup();
+      const popup = locationMarkers.current[selectedLocation].getPopup();
+      if (popup && popup.isOpen()) {
+        popup.remove();
+      }
     }
 
     // Add markers if they don't exist yet
@@ -95,6 +97,8 @@ export default function Map({
     if (locationMarkers.current[location.id]) {
       locationMarkers.current[location.id].togglePopup();
     }
+  
+    // No delayed popup toggle - the dialog will show immediately instead
   }, [isMapInitialized, selectedLocation]);
 
   // Memoize getUserLocation function to prevent recreation on every render
