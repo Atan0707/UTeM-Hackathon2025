@@ -214,17 +214,21 @@ export default function Map({
   const navigateToLocation = useCallback((location: LocationUI) => {
     if (!map.current || !isMapInitialized) return;
     
+    // Only perform actions if selecting a different location or re-selecting after null
+    const isNewSelection = selectedLocation !== location.id;
     setSelectedLocation(location.id);
     
-    map.current.flyTo({
-      center: [location.lng, location.lat],
-      zoom: 15,
-      essential: true
-    });
-    
+    // Close any open popups first to avoid visual glitches
+    if (selectedLocation && locationMarkers.current[selectedLocation]) {
+      locationMarkers.current[selectedLocation].getPopup();
+    }
+
     // Add markers if they don't exist yet
     if (!locationMarkers.current[location.id] && map.current) {
-      const popup = new maplibregl.Popup({ offset: 25 })
+      const popup = new maplibregl.Popup({ 
+        offset: 25,
+        closeButton: false // Cleaner look
+      })
         .setHTML(`
           <div>
             <h3 class="font-medium">${location.name}</h3>
@@ -249,11 +253,25 @@ export default function Map({
       locationMarkers.current[location.id] = marker;
     }
     
-    // Show popup for the location
+    // Fly to location with smooth animation
+    map.current.flyTo({
+      center: [location.lng, location.lat],
+      zoom: 16,
+      essential: true,
+      duration: 2000, // Add a 2 second animation
+      padding: { top: 50, bottom: 150, left: 50, right: 50 }, // Add padding for better view
+      curve: 1.42 // Ease-in-out curve for smooth motion
+    });
+    
+    // Show popup for the location with slight delay to ensure smoother animation
     if (locationMarkers.current[location.id]) {
-      locationMarkers.current[location.id].togglePopup();
+      setTimeout(() => {
+        if (isNewSelection && locationMarkers.current[location.id]) {
+          locationMarkers.current[location.id].togglePopup();
+        }
+      }, 1000);
     }
-  }, [isMapInitialized]);
+  }, [isMapInitialized, selectedLocation]);
 
   // Memoize getUserLocation function to prevent recreation on every render
   const getUserLocation = useCallback(() => {
