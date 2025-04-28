@@ -1,2 +1,178 @@
 ﻿  main.cpp
+  Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+  - add -D_WIN32_WINNT=0x0601 to the compiler command line; or
+  - add _WIN32_WINNT=0x0601 to your project's Preprocessor Definitions.
+  Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target).
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(3650,35): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(4132,32): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(4645,33): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(4664,48): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(4666,53): warning C4267: 'argument': conversion from 'size_t' to '_Ty', possible loss of data
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(4666,53): warning C4267:         with
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(4666,53): warning C4267:         [
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(4666,53): warning C4267:             _Ty=int
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(4666,53): warning C4267:         ]
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(4767,94): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(4915,54): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(4926,54): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(4944,54): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(4955,54): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(6398,32): warning C4244: '=': conversion from '__int64' to 'unsigned long', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(6418,32): warning C4244: '=': conversion from '__int64' to 'unsigned long', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(10154,23): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(12043,70): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(12064,70): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(12085,70): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(12107,61): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(12123,61): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(12138,61): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(12193,53): warning C4267: '+=': conversion from 'size_t' to 'unsigned int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(12204,45): warning C4267: '+=': conversion from 'size_t' to 'unsigned int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(12457,101): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(12457,87): warning C4267: 'argument': conversion from 'size_t' to 'uint16_t', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(12463,118): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(12524,111): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(12669,24): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\main.cpp(300,23): warning C4244: 'initializing': conversion from 'int64_t' to 'int', possible loss of data
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\main.cpp(313,52): warning C4244: 'argument': conversion from 'int64_t' to 'int32_t', possible loss of data
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\main.cpp(314,53): warning C4244: 'argument': conversion from 'int64_t' to 'int32_t', possible loss of data
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\main.cpp(344,57): warning C4244: 'argument': conversion from 'int64_t' to 'int32_t', possible loss of data
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\main.cpp(345,58): warning C4244: 'argument': conversion from 'int64_t' to 'int32_t', possible loss of data
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(14061,37): warning C4267: '=': conversion from 'size_t' to 'uint16_t', possible loss of data
+  (compiling source file 'main.cpp')
+      C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(14061,37):
+      the template instantiation context (the oldest one first) is
+          C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\main.cpp(46,34):
+          see reference to class template instantiation 'crow::Crow<crow::CORSHandler>' being compiled
+          C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(14624,14):
+          while compiling class template member function 'void crow::Crow<crow::CORSHandler>::run(void)'
+              C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\main.cpp(581,40):
+              see the first reference to 'crow::Crow<crow::CORSHandler>::run' in 'main'
+          C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(14657,26):
+          see reference to class template instantiation 'crow::Server<crow::Crow<crow::CORSHandler>,crow::SocketAdaptor,crow::CORSHandler>' being compiled
+          C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(14050,18):
+          while compiling class template member function 'uint16_t crow::Server<crow::Crow<crow::CORSHandler>,crow::SocketAdaptor,crow::CORSHandler>::pick_io_context_idx(void)'
+              C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(14070,38):
+              see the first reference to 'crow::Server<crow::Crow<crow::CORSHandler>,crow::SocketAdaptor,crow::CORSHandler>::pick_io_context_idx' in 'crow::Server<crow::Crow<crow::CORSHandler>,crow::SocketAdaptor,crow::CORSHandler>::do_accept'
+              C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(13997,22):
+              see the first reference to 'crow::Server<crow::Crow<crow::CORSHandler>,crow::SocketAdaptor,crow::CORSHandler>::do_accept' in 'crow::Server<crow::Crow<crow::CORSHandler>,crow::SocketAdaptor,crow::CORSHandler>::run'
+              C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(14663,29):
+              see the first reference to 'crow::Server<crow::Crow<crow::CORSHandler>,crow::SocketAdaptor,crow::CORSHandler>::run' in 'crow::Crow<crow::CORSHandler>::run'
+              C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\main.cpp(581,40):
+              see the first reference to 'crow::Crow<crow::CORSHandler>::run' in 'main'
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(13678,75): warning C4244: 'argument': conversion from 'unsigned __int64' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+      C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(13678,75):
+      the template instantiation context (the oldest one first) is
+          C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(14066,14):
+          while compiling class template member function 'void crow::Server<crow::Crow<crow::CORSHandler>,crow::SocketAdaptor,crow::CORSHandler>::do_accept(void)'
+              C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(13997,22):
+              see the first reference to 'crow::Server<crow::Crow<crow::CORSHandler>,crow::SocketAdaptor,crow::CORSHandler>::do_accept' in 'crow::Server<crow::Crow<crow::CORSHandler>,crow::SocketAdaptor,crow::CORSHandler>::run'
+              C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(14663,29):
+              see the first reference to 'crow::Server<crow::Crow<crow::CORSHandler>,crow::SocketAdaptor,crow::CORSHandler>::run' in 'crow::Crow<crow::CORSHandler>::run'
+              C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\main.cpp(581,40):
+              see the first reference to 'crow::Crow<crow::CORSHandler>::run' in 'main'
+          C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(14080,19):
+          see reference to class template instantiation 'crow::Connection<Adaptor,Handler,crow::CORSHandler>' being compiled
+          with
+          [
+              Adaptor=crow::SocketAdaptor,
+              Handler=crow::Crow<crow::CORSHandler>
+          ]
+          C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(13669,14):
+          while compiling class template member function 'void crow::Connection<Adaptor,Handler,crow::CORSHandler>::do_read(void)'
+          with
+          [
+              Adaptor=crow::SocketAdaptor,
+              Handler=crow::Crow<crow::CORSHandler>
+          ]
+              C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(13300,34):
+              see the first reference to 'crow::Connection<Adaptor,Handler,crow::CORSHandler>::do_read' in 'crow::Connection<Adaptor,Handler,crow::CORSHandler>::start::<lambda_1>::operator ()'
+          with
+          [
+              Adaptor=crow::SocketAdaptor,
+              Handler=crow::Crow<crow::CORSHandler>
+          ]
+  
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(8920,25): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+      C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(8920,25):
+      the template instantiation context (the oldest one first) is
+          C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(13796,32):
+          see reference to class template instantiation 'crow::HTTPParser<crow::Connection<Adaptor,Handler,crow::CORSHandler>>' being compiled
+          with
+          [
+              Adaptor=crow::SocketAdaptor,
+              Handler=crow::Crow<crow::CORSHandler>
+          ]
+          C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(8904,14):
+          while compiling class template member function 'bool crow::HTTPParser<crow::Connection<Adaptor,Handler,crow::CORSHandler>>::feed(const char *,int)'
+          with
+          [
+              Adaptor=crow::SocketAdaptor,
+              Handler=crow::Crow<crow::CORSHandler>
+          ]
+              C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h(13678,32):
+              see the first reference to 'crow::HTTPParser<crow::Connection<Adaptor,Handler,crow::CORSHandler>>::feed' in 'crow::Connection<Adaptor,Handler,crow::CORSHandler>::do_read::<lambda_1>::operator ()'
+          with
+          [
+              Adaptor=crow::SocketAdaptor,
+              Handler=crow::Crow<crow::CORSHandler>
+          ]
+  
   backend-2.vcxproj -> C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\x64\Debug\backend-2.exe
+  'pwsh.exe' is not recognized as an internal or external command,
+  operable program or batch file.
