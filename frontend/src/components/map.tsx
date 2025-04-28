@@ -20,10 +20,10 @@ const getMapStyle = () => {
   return 'https://demotiles.maplibre.org/style.json';
 };
 
-export default function Map({ 
+export default function Map({
   style = getMapStyle(),
   center = [102.3217, 2.3153],
-  zoom = 12 
+  zoom = 12
 }: MapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
@@ -38,11 +38,11 @@ export default function Map({
   // Function to navigate to a location when card is clicked
   const navigateToLocation = useCallback((location: LocationUI) => {
     if (!map.current || !isMapInitialized) return;
-    
+
     // Only perform actions if selecting a different location or re-selecting after null
     const isNewSelection = selectedLocation !== location.id;
     setSelectedLocation(location.id);
-    
+
     // Close any open popups first to avoid visual glitches
     if (selectedLocation && locationMarkers.current[selectedLocation]) {
       locationMarkers.current[selectedLocation].getPopup();
@@ -50,7 +50,7 @@ export default function Map({
 
     // Add markers if they don't exist yet
     if (!locationMarkers.current[location.id] && map.current) {
-      const popup = new maplibregl.Popup({ 
+      const popup = new maplibregl.Popup({
         offset: 25,
         closeButton: false // Cleaner look
       })
@@ -60,7 +60,7 @@ export default function Map({
             <p class="text-sm">${location.description}</p>
           </div>
         `);
-      
+
       const el = document.createElement('div');
       el.className = 'location-marker';
       el.style.backgroundColor = location.category === 'attraction' ? '#F7B731' : '#4B56D2';
@@ -69,25 +69,25 @@ export default function Map({
       el.style.borderRadius = '50%';
       el.style.border = '2px solid white';
       el.style.boxShadow = '0 0 0 2px rgba(0,0,0,0.1)';
-      
+
       const marker = new maplibregl.Marker(el)
         .setLngLat([location.lng, location.lat])
         .setPopup(popup)
         .addTo(map.current);
-      
+
       locationMarkers.current[location.id] = marker;
     }
-    
+
     // Fly to location with smooth animation
     map.current.flyTo({
       center: [location.lng, location.lat],
       zoom: 16,
       essential: true,
-      duration: 2000, 
-      padding: { top: 50, bottom: 150, left: 50, right: 50 }, 
-      curve: 1.42 
+      duration: 2000,
+      padding: { top: 50, bottom: 150, left: 50, right: 50 },
+      curve: 1.42
     });
-    
+
     // Show popup for the location with slight delay to ensure smoother animation
     if (locationMarkers.current[location.id]) {
       setTimeout(() => {
@@ -102,19 +102,19 @@ export default function Map({
   const getUserLocation = useCallback(() => {
     // Your existing getUserLocation implementation
     if (locationRequestedRef.current || !navigator.geolocation || !map.current || !isMapInitialized) return;
-    
+
     console.log("Getting user location...");
     locationRequestedRef.current = true;
-    
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         console.log("Location received:", position.coords.latitude, position.coords.longitude);
         const lng = position.coords.longitude;
         const lat = position.coords.latitude;
-        
+
         // Store user location for the button
         setUserLocation([lng, lat]);
-        
+
         // Center map on user's location
         if (map.current) {
           map.current.flyTo({
@@ -145,7 +145,7 @@ export default function Map({
         zoom: 15,
         essential: true
       });
-      
+
       // Show the popup when centering
       if (userMarker.current) {
         userMarker.current.togglePopup();
@@ -159,11 +159,11 @@ export default function Map({
   // Your existing useEffect code for initializing map
   useEffect(() => {
     if (map.current || !mapContainer.current) return;
-    
+
     try {
       const mapStyle = style;
       console.log("Using map style:", mapStyle); // For debugging
-      
+
       map.current = new maplibregl.Map({
         container: mapContainer.current,
         style: mapStyle,
@@ -171,7 +171,7 @@ export default function Map({
         zoom,
         attributionControl: false // Reduce network requests for attribution tiles
       });
-      
+
       // Wait for the map to load before adding controls or markers
       map.current.on('load', () => {
         console.log("Map loaded successfully");
@@ -180,14 +180,14 @@ export default function Map({
           setIsMapInitialized(true);
         }
       });
-      
+
       map.current.on('error', (e) => {
         console.error('Map error:', e);
       });
     } catch (err) {
       console.error('Error initializing map:', err);
     }
-    
+
     return () => {
       locationRequestedRef.current = false;
       if (map.current) {
@@ -208,22 +208,22 @@ export default function Map({
       const timer = setTimeout(() => {
         getUserLocation();
       }, 500);
-      
+
       return () => clearTimeout(timer);
     }
   }, [isMapInitialized, getUserLocation]);
 
   return (
     <div className="relative w-full h-full" style={{ minHeight: "400px" }}>
-      <div 
-        ref={mapContainer} 
+      <div
+        ref={mapContainer}
         className="w-full h-full"
       />
-      
+
       {locationError && (
         <div className="absolute top-2 left-2 right-2 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded z-20">
           <p>{locationError}</p>
-          <button 
+          <button
             onClick={() => {
               setLocationError(null);
               locationRequestedRef.current = false;
@@ -235,7 +235,7 @@ export default function Map({
           </button>
         </div>
       )}
-      
+
       {/* Button to get initial location if not yet obtained */}
       {!userLocation && !locationError && isMapInitialized && (
         <button
@@ -248,7 +248,7 @@ export default function Map({
           </svg>
         </button>
       )}
-      
+
       {/* Button to center on existing location */}
       {userLocation && (
         <button
@@ -262,7 +262,7 @@ export default function Map({
           </svg>
         </button>
       )}
-      
+
       {/* Location cards at the bottom */}
       <div className="absolute bottom-4 left-0 right-0 z-10 px-4">
         <div className="flex overflow-x-auto gap-3 pb-1">
@@ -279,10 +279,12 @@ export default function Map({
               <h3 className="font-medium text-base truncate">{location.name}</h3>
               <p className="text-gray-600 text-sm line-clamp-2 mt-1">{location.description}</p>
               <div className={`
-                mt-2 inline-block px-2 py-1 text-xs rounded-full
-                ${location.category === 'attraction' ? 'bg-yellow-100 text-yellow-700' : 
-                 location.category === 'University' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}
-              `}>
+                  mt-2 inline-block px-2 py-1 text-xs rounded-full
+                ${location.category === 'Attraction' ? 'bg-yellow-100 text-yellow-700' :
+                  location.category === 'University' ? 'bg-blue-100 text-blue-700' :
+                    location.category === 'Shopping' ? 'bg-purple-100 text-purple-700' :
+                      location.category === 'Historical' ? 'bg-amber-100 text-amber-700' :
+                        'bg-gray-100 text-gray-700'}`}>
                 {location.category}
               </div>
             </div>

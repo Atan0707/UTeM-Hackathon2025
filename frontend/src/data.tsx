@@ -106,7 +106,7 @@ export const locations: LocationUI[] = [
         name: 'Cheng Hoon Teng Temple',
         description: 'Oldest Chinese temple in Malaysia',
         imageUrl: '/images/cheng-hoon-teng.jpg',
-        category: 'Temple'
+        category: 'Attraction'
     },
     {
         id: 'kampung-kling-mosque',
@@ -115,7 +115,7 @@ export const locations: LocationUI[] = [
         name: 'Kampung Kling Mosque',
         description: 'One of the oldest mosques in Melaka',
         imageUrl: '/images/kampung-kling.jpg',
-        category: 'Mosque'
+        category: 'Attraction'
     },
     {
         id: 'st-francis-xavier-church',
@@ -124,7 +124,7 @@ export const locations: LocationUI[] = [
         name: 'St. Francis Xavier Church',
         description: '19th-century Gothic-style church',
         imageUrl: '/images/st-francis.jpg',
-        category: 'Church'
+        category: 'Attraction'
     },
     {
         id: 'melaka-zoo',
@@ -142,7 +142,7 @@ export const locations: LocationUI[] = [
         name: 'Klebang Beach',
         description: 'Popular beach with coconut shake stalls',
         imageUrl: '/images/klebang-beach.jpg',
-        category: 'Beach'
+        category: 'Attraction'
     },
     {
         id: 'melaka-bird-park',
@@ -160,7 +160,7 @@ export const locations: LocationUI[] = [
         name: 'Melaka Wonderland',
         description: 'Water theme park in Ayer Keroh',
         imageUrl: '/images/wonderland.jpg',
-        category: 'Theme Park'
+        category: 'Attraction'
     },
     {
         id: 'melaka-botanical-garden',
@@ -169,7 +169,7 @@ export const locations: LocationUI[] = [
         name: 'Melaka Botanical Garden',
         description: 'Beautiful garden with various plant species',
         imageUrl: '/images/botanical-garden.jpg',
-        category: 'Garden'
+        category: 'Attraction'
     }
 ]
 
