@@ -39,17 +39,60 @@ export default function Map({
   // Function to navigate to a location when card is clicked
   const navigateToLocation = useCallback((location: LocationUI) => {
     if (!map.current || !isMapInitialized) return;
-
-    // Only perform actions if selecting a different location or re-selecting after null
+    
     const isNewSelection = selectedLocation !== location.id;
     setSelectedLocation(location.id);
-
-    // Set the dialog content
     setDialogLocation(location);
 
     // Close any open popups first to avoid visual glitches
     if (selectedLocation && locationMarkers.current[selectedLocation]) {
       locationMarkers.current[selectedLocation].getPopup();
+    }
+
+    // Add markers if they don't exist yet
+    if (!locationMarkers.current[location.id] && map.current) {
+      console.log('Creating marker for:', location.name);
+      console.log('Category:', location.category);
+      console.log('Emoji:', getCategoryEmoji(location.category));
+
+      const popup = new maplibregl.Popup({
+        offset: 25,
+        closeButton: false
+      })
+        .setHTML(`
+          <div>
+            <h3 class="font-medium">${location.name}</h3>
+            <p class="text-sm">${location.description}</p>
+          </div>
+        `);
+
+      const el = document.createElement('div');
+      el.className = 'location-marker';
+      el.style.width = '30px';
+      el.style.height = '30px';
+      el.style.display = 'flex';
+      el.style.alignItems = 'center';
+      el.style.justifyContent = 'center';
+      el.style.fontSize = '24px'; // Increased font size
+      el.style.backgroundColor = 'white';
+      el.style.borderRadius = '50%';
+      el.style.border = '2px solid white';
+      el.style.boxShadow = '0 0 0 2px rgba(0,0,0,0.1)';
+      
+      // Create a span element for the emoji
+      const emojiSpan = document.createElement('span');
+      const emoji = getCategoryEmoji(location.category);
+      console.log('Setting emoji span content:', emoji);
+      emojiSpan.textContent = emoji;
+      el.appendChild(emojiSpan);
+
+      const marker = new maplibregl.Marker(el)
+        .setLngLat([location.lng, location.lat])
+        .setPopup(popup)
+        .addTo(map.current);
+
+      locationMarkers.current[location.id] = marker;
+      console.log('Marker created and added to map');
     }
 
     // Fly to location with smooth animation
@@ -62,13 +105,9 @@ export default function Map({
       curve: 1.42
     });
 
-    // Show popup for the location with slight delay to ensure smoother animation
+    // Show the popup when centering
     if (locationMarkers.current[location.id]) {
-      setTimeout(() => {
-        if (isNewSelection && locationMarkers.current[location.id]) {
-          locationMarkers.current[location.id].togglePopup();
-        }
-      }, 1000);
+      locationMarkers.current[location.id].togglePopup();
     }
   }, [isMapInitialized, selectedLocation]);
 
