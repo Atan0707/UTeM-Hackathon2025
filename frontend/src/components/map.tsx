@@ -83,6 +83,7 @@ export default function Map({
       locationMarkers.current[location.id] = marker;
     }
 
+
     // First zoom out from current location
     if (selectedLocation && locationMarkers.current[selectedLocation]) {
       const currentMarker = locationMarkers.current[selectedLocation];
@@ -115,6 +116,7 @@ export default function Map({
         }
       }
     }, 1000);
+
   }, [isMapInitialized, selectedLocation]);
 
   // Memoize getUserLocation function to prevent recreation on every render
@@ -325,13 +327,13 @@ export default function Map({
               <h3 className="font-medium text-base truncate text-blue-900">{location.name}</h3>
               <p className="text-gray-600 text-sm line-clamp-2 mt-1">{location.description}</p>
               <div className={`
-                  mt-2 inline-block px-2 py-1 text-xs rounded-full
+                mt-2 inline-block px-2 py-1 text-xs rounded-full
                 ${location.category === 'Attraction' ? 'bg-yellow-100 text-yellow-700' :
-                  location.category === 'University' ? 'bg-blue-100 text-blue-700' :
-                    location.category === 'Shopping' ? 'bg-purple-100 text-purple-700' :
-                      location.category === 'Historical' ? 'bg-amber-100 text-amber-700' :
-                        'bg-gray-100 text-gray-700'}`}>
-                {location.category}
+                   location.category === 'University' ? 'bg-blue-100 text-blue-700' :
+                     location.category === 'Shopping' ? 'bg-purple-100 text-purple-700' :
+                       location.category === 'Heritage' ? 'bg-amber-100 text-amber-700' :
+                         'bg-gray-100 text-gray-700'}`}>
+                {getCategoryEmoji(location.category)} {location.category}
               </div>
             </div>
           ))}
@@ -400,7 +402,7 @@ export default function Map({
                   dialogLocation.category === 'Heritage' ? 'bg-amber-100 text-amber-700' :
                     'bg-gray-100 text-gray-700'}
     `}>
-            {dialogLocation.category}
+            {getCategoryEmoji(dialogLocation.category)} {dialogLocation.category}
           </div>
 
           {/* User Reviews Section */}
@@ -492,9 +494,7 @@ export default function Map({
               href={`https://www.google.com/maps/search/?api=1&query=${dialogLocation.lat},${dialogLocation.lng}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full block text-center text-xs bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition"
-            >
-              Open in Google Maps
+              className="w-full block text-center text-xs bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition">Open in Google Maps
             </a>
           </div>
         </div>
