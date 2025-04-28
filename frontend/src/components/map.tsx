@@ -121,26 +121,6 @@ export default function Map({
       }
     }
 
-<<<<<<< HEAD
-    // Fly to location with exact coordinates
-    map.current.flyTo({
-      center: [location.lng, location.lat],
-      zoom: 16,
-      pitch: enable3DBuildings ? 45 : 0,
-      essential: true,
-      duration: 1500,
-      padding: { top: 50, bottom: 150, left: 50, right: 50 },
-      curve: 1.42
-    });
-
-    // Show the popup when centering
-    if (locationMarkers.current[location.id]) {
-      setTimeout(() => {
-        locationMarkers.current[location.id].togglePopup();
-      }, 300);
-    }
-  }, [isMapInitialized, selectedLocation, enable3DBuildings]);
-=======
     // Add markers if they don't exist yet
     if (!locationMarkers.current[location.id] && map.current) {
       const popup = new maplibregl.Popup({ 
@@ -208,7 +188,6 @@ export default function Map({
     }, 1000);
 
   }, [isMapInitialized, selectedLocation]);
->>>>>>> b4a5fded5b3ab09c69645f61aa8619947b708fb9
 
   // Memoize getUserLocation function to prevent recreation on every render
   const getUserLocation = useCallback(() => {
@@ -436,19 +415,6 @@ export default function Map({
     };
   }, [center, zoom, style]);
 
-<<<<<<< HEAD
-  // Add cleanup for markers when component unmounts
-  useEffect(() => {
-    return () => {
-      Object.values(locationMarkers.current).forEach(marker => {
-        if (marker) {
-          marker.remove();
-        }
-      });
-      locationMarkers.current = {};
-    };
-  }, []);
-=======
   // Add a useEffect to handle dialog visibility
   useEffect(() => {
     if (dialogLocation) {
@@ -459,7 +425,6 @@ export default function Map({
       }
     }
   }, [dialogLocation]);
->>>>>>> b4a5fded5b3ab09c69645f61aa8619947b708fb9
 
   return (
     <div className="relative w-full h-full" style={{ minHeight: "400px" }}>
@@ -511,26 +476,6 @@ export default function Map({
         </button>
       )}
 
-<<<<<<< HEAD
-      {/* Button to toggle between basic and 3D maps */}
-      <button
-        onClick={() => {
-          const newEnable3DBuildings = !enable3DBuildings;
-          if (map.current) {
-            map.current.setPitch(newEnable3DBuildings ? 45 : 0);
-          }
-          // Note: You'll need to add a state variable for enable3DBuildings if not already present
-          // For example: const [enable3DBuildings, setEnable3DBuildings] = useState(false);
-          // Then call setEnable3DBuildings(newEnable3DBuildings);
-        }}
-        className="absolute bottom-48 right-20 bg-purple-700 hover:bg-purple-800 text-white font-medium rounded-full p-3 shadow-lg transition-colors z-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
-        aria-label="Toggle 3D buildings"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-        </svg>
-      </button>
-=======
       {/* Category Filter UI */}
       <div className="absolute left-0 right-0 top-2 z-20 flex justify-center">
         <div className="bg-white rounded-full shadow px-4 py-2 flex gap-2 items-center">
@@ -546,7 +491,6 @@ export default function Map({
           ))}
         </div>
       </div>
->>>>>>> b4a5fded5b3ab09c69645f61aa8619947b708fb9
 
       {/* Location cards at the bottom */}
       <div className="absolute bottom-4 left-0 right-0 z-10 px-4">
