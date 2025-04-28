@@ -110,10 +110,10 @@ export default function Map({
   // Function to center map on user location
   const showUserLocation = useCallback(() => {
     console.log('showUserLocation called', { userLocation, isMapInitialized });
-    
+
     if (userLocation && map.current && isMapInitialized) {
       console.log('Creating/updating user marker at:', userLocation);
-      
+
       map.current.flyTo({
         center: userLocation,
         zoom: 15,
@@ -124,7 +124,7 @@ export default function Map({
       if (userMarker.current) {
         userMarker.current.togglePopup();
       }
-      
+
       // Show the popup when centering
       //userMarker.current.togglePopup();
     } else if (!userLocation) {
@@ -141,7 +141,7 @@ export default function Map({
       const timer = setTimeout(() => {
         getUserLocation();
       }, 500);
-      
+
       return () => clearTimeout(timer);
     }
   }, [isMapInitialized, getUserLocation]);
@@ -226,7 +226,7 @@ export default function Map({
       {!userLocation && !locationError && isMapInitialized && (
         <button
           onClick={getUserLocation}
-          className="absolute bottom-32 right-6 bg-green-600 hover:bg-green-700 text-white font-medium rounded-full p-3 shadow-lg transition-colors z-10 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="absolute bottom-48 right-6 bg-green-600 hover:bg-green-700 text-white font-medium rounded-full p-3 shadow-lg transition-colors z-10 focus:outline-none focus:ring-2 focus:ring-green-500"
           aria-label="Get my location"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -239,7 +239,7 @@ export default function Map({
       {userLocation && (
         <button
           onClick={showUserLocation}
-          className="absolute bottom-32 right-6 bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-full p-3 shadow-lg transition-colors z-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="absolute bottom-48 right-6 bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-full p-3 shadow-lg transition-colors z-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
           aria-label="Show my location"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
