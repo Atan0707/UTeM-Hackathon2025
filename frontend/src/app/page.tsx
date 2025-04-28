@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Map from '@/components/map';
-import SidebarMenu from '@/components/SidebarMenu';
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -13,7 +12,6 @@ export default function Home() {
       <header className="bg-white shadow-sm z-10">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <SidebarMenu />
             <h1 className="text-2xl font-bold text-gray-900">Visit Melaka 2025</h1>
           </div>
           
