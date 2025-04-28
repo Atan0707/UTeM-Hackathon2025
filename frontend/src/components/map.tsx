@@ -36,40 +36,34 @@ export default function Map({
   const [dialogLocation, setDialogLocation] = useState<LocationUI | null>(null);
   const locationRequestedRef = useRef(false);
 
-  // Function to navigate to a location when card is clicked
   const navigateToLocation = useCallback((location: LocationUI) => {
     if (!map.current || !isMapInitialized) return;
-
-    // Only perform actions if selecting a different location or re-selecting after null
-    const isNewSelection = selectedLocation !== location.id;
-    setSelectedLocation(location.id);
-
-    // Set the dialog content
-    setDialogLocation(location);
-
-    // Close any open popups first to avoid visual glitches
+  
+    // Close any previously opened popups
     if (selectedLocation && locationMarkers.current[selectedLocation]) {
-      locationMarkers.current[selectedLocation].getPopup();
+      const popup = locationMarkers.current[selectedLocation].getPopup();
+      if (popup && popup.isOpen()) {
+        popup.remove();
+      }
     }
-
+  
+    // Update UI state
+    setSelectedLocation(location.id);
+    setDialogLocation(location);
+  
     // Fly to location with smooth animation
-    map.current.flyTo({
-      center: [location.lng, location.lat],
-      zoom: 16,
-      essential: true,
-      duration: 2000,
-      padding: { top: 50, bottom: 150, left: 50, right: 50 },
-      curve: 1.42
-    });
-
-    // Show popup for the location with slight delay to ensure smoother animation
-    if (locationMarkers.current[location.id]) {
-      setTimeout(() => {
-        if (isNewSelection && locationMarkers.current[location.id]) {
-          locationMarkers.current[location.id].togglePopup();
-        }
-      }, 1000);
+    if (map.current) {
+      map.current.flyTo({
+        center: [location.lng, location.lat],
+        zoom: 16,
+        essential: true,
+        duration: 1500, // Slightly faster animation
+        padding: { top: 50, bottom: 150, left: 50, right: 50 },
+        curve: 1.42
+      });
     }
+  
+    // No delayed popup toggle - the dialog will show immediately instead
   }, [isMapInitialized, selectedLocation]);
 
   // Memoize getUserLocation function to prevent recreation on every render
