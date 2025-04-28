@@ -123,9 +123,9 @@ export default function Map({
       center: [location.lng, location.lat],
       zoom: 16,
       essential: true,
-      duration: 2000, // Add a 2 second animation
-      padding: { top: 50, bottom: 150, left: 50, right: 50 }, // Add padding for better view
-      curve: 1.42 // Ease-in-out curve for smooth motion
+      duration: 2000, 
+      padding: { top: 50, bottom: 150, left: 50, right: 50 }, 
+      curve: 1.42 
     });
     
     // Show popup for the location with slight delay to ensure smoother animation
