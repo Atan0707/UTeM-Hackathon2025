@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { LocationUI, locations } from '../data';
+import { LocationUI, locations, getCategoryEmoji } from '../data';
 
 interface MapProps {
   style?: string;
@@ -33,6 +33,7 @@ export default function Map({
   const [isMapInitialized, setIsMapInitialized] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+  const [dialogLocation, setDialogLocation] = useState<LocationUI | null>(null);
   const locationRequestedRef = useRef(false);
 
   // Function to navigate to a location when card is clicked
@@ -42,6 +43,9 @@ export default function Map({
     // Only perform actions if selecting a different location or re-selecting after null
     const isNewSelection = selectedLocation !== location.id;
     setSelectedLocation(location.id);
+
+    // Set the dialog content
+    setDialogLocation(location);
 
     // Close any open popups first to avoid visual glitches
     if (selectedLocation && locationMarkers.current[selectedLocation]) {
@@ -277,6 +281,61 @@ export default function Map({
           ))}
         </div>
       </div>
+
+      {/* Information Dialog */}
+      {dialogLocation && (
+        <div className="absolute top-4 left-4 bg-white rounded-lg shadow-lg p-4 z-20 max-w-xs w-full border border-gray-200">
+          <div className="flex justify-between items-start mb-2">
+            <div className="flex items-center">
+              <span className="text-xl mr-2">{getCategoryEmoji(dialogLocation.category)}</span>
+              <h3 className="font-bold text-lg pr-6">{dialogLocation.name}</h3>
+            </div>
+            <button
+              onClick={() => setDialogLocation(null)}
+              className="text-gray-500 hover:text-gray-700"
+              aria-label="Close details"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
+          </div>
+
+          {dialogLocation.imageUrl && (
+            <div className="mb-3 rounded-md overflow-hidden">
+              <img
+                src={dialogLocation.imageUrl}
+                alt={dialogLocation.name}
+                className="w-full h-32 object-cover"
+              />
+            </div>
+          )}
+
+          <p className="text-sm text-gray-600 mb-3">{dialogLocation.description}</p>
+
+          <div className="flex flex-wrap justify-between items-center">
+            <div className={`
+        px-2 py-1 text-xs rounded-full mb-2
+        ${dialogLocation.category === 'Attraction' ? 'bg-yellow-100 text-yellow-700' :
+                dialogLocation.category === 'University' ? 'bg-blue-100 text-blue-700' :
+                  dialogLocation.category === 'Shopping' ? 'bg-purple-100 text-purple-700' :
+                    dialogLocation.category === 'Historical' ? 'bg-amber-100 text-amber-700' :
+                      'bg-gray-100 text-gray-700'}
+      `}>
+              {dialogLocation.category}
+            </div>
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${dialogLocation.lat},${dialogLocation.lng}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition"
+            >
+              Open in Google Maps
+            </a>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

@@ -236,4 +236,30 @@ export const locations: LocationUI[] = [
       }
 ]
 
+// Add this helper function to your data.tsx file
+export const getCategoryEmoji = (category?: string): string => {
+    switch (category?.toLowerCase()) {
+      case 'shopping':
+        return '🛍️';
+      case 'attraction':
+        return '🎡';
+      case 'temple':
+        return '🛕';
+      case 'mosque':
+        return '🕌';
+      case 'church':
+        return '⛪';
+      case 'beach':
+        return '🏖️';
+      case 'theme park':
+        return '🎢';
+      case 'garden':
+        return '🌿';
+      case 'historical':
+        return '🏛️';
+      default:
+        return '📍';
+    }
+  };
+
 
