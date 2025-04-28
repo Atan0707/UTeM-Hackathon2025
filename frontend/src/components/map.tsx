@@ -288,7 +288,7 @@ export default function Map({
           <div className="flex justify-between items-start mb-2">
             <div className="flex items-center">
               <span className="text-xl mr-2">{getCategoryEmoji(dialogLocation.category)}</span>
-              <h3 className="font-bold text-lg pr-6">{dialogLocation.name}</h3>
+              <h3 className="font-bold text-lg pr-6 text-blue-900">{dialogLocation.name}</h3>
             </div>
             <button
               onClick={() => setDialogLocation(null)}
