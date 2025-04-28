@@ -51,7 +51,7 @@ export const locations: LocationUI[] = [
         lat: 2.2809107922639793,
         name: 'Melaka Wonderland',
         description: 'Water Theme Park in Ayer Keroh',
-        imageUrl: '/images/jonker-street.jpg',
+        imageUrl: 'https://images.t2u.io/upload/event/listing/0-35554-AWSS38ed7b4c9-681e-44cf-8c3f-55fc6b3351e5-nde3.jpg',
         category: 'Attraction'
     },
     {
@@ -60,7 +60,7 @@ export const locations: LocationUI[] = [
         lat: 2.2765622753900105,
         name: 'Zoo Melaka',
         description: 'Zoo in Ayer Keroh',
-        imageUrl: '/images/sultanate-palace.jpg',
+        imageUrl: 'https://www.zoomelaka.gov.my/_include/img/profile/kepper-talkbaru.jpg',
         category: 'Attraction'
     },
     {
@@ -69,7 +69,7 @@ export const locations: LocationUI[] = [
         lat: 2.27718336006831,
         name: 'Taman Buaya & Rekreasi Melaka (Melaka Crocodile & ​​Recreational Park)',
         description: 'Crocodile Park in Ayer Keroh',
-        imageUrl: '/images/maritime-museum.jpg',
+        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCUbQfQ92Try7E9Wfgq8ZatSokcLAxJzQGYg&s',
         category: 'Attraction'
     },
     {
@@ -78,7 +78,7 @@ export const locations: LocationUI[] = [
         lat: 2.4270136340135995,
         name: 'A Famosa Water Theme Park (Water World)',
         description: 'Water Park in A Famosa',
-        imageUrl: '/images/baba-nyonya.jpg',
+        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSa1cwLF_lXpCh8BUEWcNfnR23JvNwBvp-U9w&s',
         category: 'Attraction'
     },
     {
@@ -87,7 +87,7 @@ export const locations: LocationUI[] = [
         lat: 2.1956,
         name: 'Menara Taming Sari',
         description: 'Revolving tower offering panoramic views of Melaka',
-        imageUrl: '/images/taming-sari.jpg',
+        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3MmfxlQi4_DbEL3Hhg_jv-kc5M993opAG3w&s',
         category: 'Attraction'
     },
     {
@@ -96,7 +96,7 @@ export const locations: LocationUI[] = [
         lat: 2.1958,
         name: 'Melaka River Cruise',
         description: 'Scenic boat ride along the Melaka River',
-        imageUrl: '/images/river-cruise.jpg',
+        imageUrl: 'https://image.kkday.com/v2/image/get/w_1900%2Cc_fit%2Cq_55/s1.kkday.com/product_103696/20210827105154_XA3rW/jpg',
         category: 'Attraction'
     },
     {
@@ -105,7 +105,7 @@ export const locations: LocationUI[] = [
         lat: 2.1966,
         name: 'Cheng Hoon Teng Temple',
         description: 'Oldest Chinese temple in Malaysia',
-        imageUrl: '/images/cheng-hoon-teng.jpg',
+        imageUrl: 'https://gowhere.my/wp-content/uploads/2015/10/Cheng-Hoon-Teng-e1445227982909.jpg',
         category: 'Attraction'
     },
     {
@@ -114,7 +114,7 @@ export const locations: LocationUI[] = [
         lat: 2.1968,
         name: 'Kampung Kling Mosque',
         description: 'One of the oldest mosques in Melaka',
-        imageUrl: '/images/kampung-kling.jpg',
+        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLPkmN8xhkzVaCSoQPiQ6VzhwM_-j0SqWi-g&s',
         category: 'Attraction'
     },
     {
@@ -123,7 +123,7 @@ export const locations: LocationUI[] = [
         lat: 2.1945,
         name: 'St. Francis Xavier Church',
         description: '19th-century Gothic-style church',
-        imageUrl: '/images/st-francis.jpg',
+        imageUrl: 'https://res.klook.com/image/upload/fl_lossy.progressive,w_432,h_288,c_fill,q_85/activities/6bac3ac9-.jpg',
         category: 'Attraction'
     },
     {
@@ -141,7 +141,7 @@ export const locations: LocationUI[] = [
         lat: 2.2167,
         name: 'Klebang Beach',
         description: 'Popular beach with coconut shake stalls',
-        imageUrl: '/images/klebang-beach.jpg',
+        imageUrl: 'https://live.staticflickr.com/3317/5817241491_d935dc0d9a_b.jpg',
         category: 'Attraction'
     },
     {
