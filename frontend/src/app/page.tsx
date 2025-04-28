@@ -9,10 +9,10 @@ export default function Home() {
   return (
     <main className="flex flex-col h-screen w-full">
       {/* Header */}
-      <header className="bg-white shadow-sm z-10 border-b-2 border-black">
+      <header className="z-10 absolute top-0 left-0 right-0 bg-transparent">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <h1 className="text-2xl font-bold text-gray-900">Visit Melaka 2025</h1>
+            <h1 className="text-2xl font-bold text-white text-shadow-sm">Visit Melaka 2025</h1>
           </div>
           
           {/* Login Section */}
