@@ -314,22 +314,77 @@ export default function Map({
 
   // Function to center map on user location
   const showUserLocation = useCallback(() => {
+    console.log('showUserLocation called', { userLocation, isMapInitialized });
+    
     if (userLocation && map.current && isMapInitialized) {
+      console.log('Creating/updating user marker at:', userLocation);
+      
       map.current.flyTo({
         center: userLocation,
         zoom: 15,
         essential: true
       });
       
-      // Show the popup when centering
-      if (userMarker.current) {
-        userMarker.current.togglePopup();
+      // Create or update user marker
+      if (!userMarker.current) {
+        console.log('Creating new user marker');
+        const el = document.createElement('div');
+        el.className = 'user-marker';
+        el.style.width = '20px';
+        el.style.height = '20px';
+        el.style.backgroundColor = 'black';
+        el.style.borderRadius = '50%';
+        el.style.border = '2px solid white';
+        el.style.boxShadow = '0 0 0 2px rgba(0,0,0,0.1)';
+        
+        const popup = new maplibregl.Popup({ 
+          offset: 25,
+          closeButton: false
+        }).setHTML(`
+          <div class="text-black font-medium">
+            You are here
+          </div>
+        `);
+        
+        userMarker.current = new maplibregl.Marker(el)
+          .setLngLat(userLocation)
+          .setPopup(popup)
+          .addTo(map.current);
+        
+        console.log('User marker created and added to map');
+      } else {
+        console.log('Updating existing user marker position');
+        userMarker.current.setLngLat(userLocation);
       }
+      
+      // Show the popup when centering
+      userMarker.current.togglePopup();
     } else if (!userLocation) {
-      // If we don't have the location yet, try to get it
+      console.log('No user location available, requesting location');
       getUserLocation();
     }
   }, [userLocation, isMapInitialized, getUserLocation]);
+
+  // Get user location after map is initialized
+  useEffect(() => {
+    if (isMapInitialized) {
+      console.log('Map initialized, requesting user location');
+      // Add delay to ensure map is ready
+      const timer = setTimeout(() => {
+        getUserLocation();
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isMapInitialized, getUserLocation]);
+
+  // Update user marker when location changes
+  useEffect(() => {
+    if (userLocation && map.current && isMapInitialized && userMarker.current) {
+      console.log('Updating user marker position due to location change:', userLocation);
+      userMarker.current.setLngLat(userLocation);
+    }
+  }, [userLocation, isMapInitialized]);
 
   // Your existing useEffect code for initializing map
   useEffect(() => {
@@ -375,18 +430,6 @@ export default function Map({
       }
     };
   }, [center, zoom, style]);
-
-  // Get user location after map is initialized
-  useEffect(() => {
-    if (isMapInitialized) {
-      // Add delay to ensure map is ready
-      const timer = setTimeout(() => {
-        getUserLocation();
-      }, 500);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [isMapInitialized, getUserLocation]);
 
   return (
     <div className="relative w-full h-full" style={{ minHeight: "400px" }}>
