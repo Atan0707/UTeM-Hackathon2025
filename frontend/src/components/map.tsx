@@ -328,9 +328,7 @@ export default function Map({
               href={`https://www.google.com/maps/search/?api=1&query=${dialogLocation.lat},${dialogLocation.lng}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition"
-            >
-              Open in Google Maps
+              className="text-xs bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition">Open in Google Maps
             </a>
           </div>
         </div>

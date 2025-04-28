@@ -15,7 +15,7 @@ export const locations: LocationUI[] = [
         lat: 2.1894375051968415,
         name: 'Mahkota Parade',
         description: 'Shopping Center near Klebang Beach',
-        imageUrl: '/images/utem.jpg',
+        imageUrl: 'https://tourismmelaka.com/wp-content/uploads/2017/11/58_Mahkota-Parade.jpg',
         category: 'Shopping'
     },
     {
