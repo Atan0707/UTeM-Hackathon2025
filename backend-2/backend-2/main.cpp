@@ -3,6 +3,8 @@
 #include <mysql_connection.h>
 #include <cppconn/statement.h>
 #include <cppconn/resultset.h>
+#include <crow_all.h>
+
 using namespace std;    
 
 int main() {
@@ -13,7 +15,7 @@ int main() {
         sql::ResultSet* res;
 
         driver = sql::mysql::get_mysql_driver_instance();
-        con = driver->connect("tcp://127.0.0.1:3306", "root", "root");
+        con = driver->connect("http://127.0.0.1:3306", "root", "root");
         con->setSchema("utem_hackathon");
 
         stmt = con->createStatement();
