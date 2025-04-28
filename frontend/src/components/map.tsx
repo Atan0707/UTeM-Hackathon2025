@@ -258,8 +258,8 @@ export default function Map({
               onClick={() => navigateToLocation(location)}
               className={`
                 flex-shrink-0 bg-white rounded-lg shadow-md p-3 cursor-pointer
-                w-56 transition-all duration-200 border-2 border-black
-                ${selectedLocation === location.id ? 'shadow-xl transform -translate-y-1' : 'hover:shadow-lg'}
+                w-56 transition-all duration-300 ease-in-out border-2 border-black overflow-hidden
+                ${selectedLocation === location.id ? 'shadow-xl transform -translate-y-1' : 'hover:scale-105 hover:shadow-xl hover:border-black'}
               `}
             >
               <h3 className="font-medium text-base truncate text-blue-900">{location.name}</h3>
