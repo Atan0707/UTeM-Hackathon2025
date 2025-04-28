@@ -21,7 +21,7 @@ interface LocationUI {
   category?: string;
 }
 
-const predefinedLocations = [
+const locations = [
   {
     id: 'uitm',
     lng: 102.3217,
@@ -32,23 +32,158 @@ const predefinedLocations = [
     category: 'University'
   },
   {
-    id: 'utem',
-    lng: 102.3217,
-    lat: 2.3153,
-    name: 'UTeM',
-    description: 'Universiti Teknikal Malaysia Melaka',
-    imageUrl: '/images/utem.jpg',
-    category: 'University'
+    id: 'a-famosa',
+    lng: 102.2500,
+    lat: 2.1944,
+    name: 'A Famosa',
+    description: 'Historical Portuguese fortress built in 1511',
+    imageUrl: '/images/a-famosa.jpg',
+    category: 'Historical Site'
+  },
+  {
+    id: 'st-pauls-church',
+    lng: 102.2497,
+    lat: 2.1942,
+    name: 'St. Paul\'s Church',
+    description: '16th-century church with historical significance',
+    imageUrl: '/images/st-pauls.jpg',
+    category: 'Historical Site'
+  },
+  {
+    id: 'christ-church',
+    lng: 102.2483,
+    lat: 2.1961,
+    name: 'Christ Church',
+    description: 'Iconic red Dutch church in Melaka',
+    imageUrl: '/images/christ-church.jpg',
+    category: 'Historical Site'
   },
   {
     id: 'jonker-street',
-    lng: 102.2461,
-    lat: 2.1946,
+    lng: 102.2467,
+    lat: 2.1964,
     name: 'Jonker Street',
-    description: 'Famous street with shops and weekend night market',
+    description: 'Famous night market and shopping street',
     imageUrl: '/images/jonker-street.jpg',
-    category: 'attraction'
+    category: 'Shopping'
   },
+  {
+    id: 'melaka-sultanate-palace',
+    lng: 102.2506,
+    lat: 2.1939,
+    name: 'Melaka Sultanate Palace',
+    description: 'Replica of the 15th-century palace of Sultan Mansur Shah',
+    imageUrl: '/images/sultanate-palace.jpg',
+    category: 'Museum'
+  },
+  {
+    id: 'maritime-museum',
+    lng: 102.2486,
+    lat: 2.1947,
+    name: 'Maritime Museum',
+    description: 'Museum showcasing Melaka\'s maritime history',
+    imageUrl: '/images/maritime-museum.jpg',
+    category: 'Museum'
+  },
+  {
+    id: 'baba-nyonya-heritage-museum',
+    lng: 102.2469,
+    lat: 2.1962,
+    name: 'Baba & Nyonya Heritage Museum',
+    description: 'Museum of Peranakan culture and history',
+    imageUrl: '/images/baba-nyonya.jpg',
+    category: 'Museum'
+  },
+  {
+    id: 'menara-taming-sari',
+    lng: 102.2489,
+    lat: 2.1956,
+    name: 'Menara Taming Sari',
+    description: 'Revolving tower offering panoramic views of Melaka',
+    imageUrl: '/images/taming-sari.jpg',
+    category: 'Attraction'
+  },
+  {
+    id: 'melaka-river-cruise',
+    lng: 102.2478,
+    lat: 2.1958,
+    name: 'Melaka River Cruise',
+    description: 'Scenic boat ride along the Melaka River',
+    imageUrl: '/images/river-cruise.jpg',
+    category: 'Attraction'
+  },
+  {
+    id: 'cheng-hoon-teng-temple',
+    lng: 102.2472,
+    lat: 2.1966,
+    name: 'Cheng Hoon Teng Temple',
+    description: 'Oldest Chinese temple in Malaysia',
+    imageUrl: '/images/cheng-hoon-teng.jpg',
+    category: 'Temple'
+  },
+  {
+    id: 'kampung-kling-mosque',
+    lng: 102.2475,
+    lat: 2.1968,
+    name: 'Kampung Kling Mosque',
+    description: 'One of the oldest mosques in Melaka',
+    imageUrl: '/images/kampung-kling.jpg',
+    category: 'Mosque'
+  },
+  {
+    id: 'st-francis-xavier-church',
+    lng: 102.2492,
+    lat: 2.1945,
+    name: 'St. Francis Xavier Church',
+    description: '19th-century Gothic-style church',
+    imageUrl: '/images/st-francis.jpg',
+    category: 'Church'
+  },
+  {
+    id: 'melaka-zoo',
+    lng: 102.3167,
+    lat: 2.2667,
+    name: 'Melaka Zoo',
+    description: 'Second largest zoo in Malaysia',
+    imageUrl: '/images/melaka-zoo.jpg',
+    category: 'Attraction'
+  },
+  {
+    id: 'klebang-beach',
+    lng: 102.2000,
+    lat: 2.2167,
+    name: 'Klebang Beach',
+    description: 'Popular beach with coconut shake stalls',
+    imageUrl: '/images/klebang-beach.jpg',
+    category: 'Beach'
+  },
+  {
+    id: 'melaka-bird-park',
+    lng: 102.3000,
+    lat: 2.2500,
+    name: 'Melaka Bird Park',
+    description: 'Home to various species of birds',
+    imageUrl: '/images/bird-park.jpg',
+    category: 'Attraction'
+  },
+  {
+    id: 'melaka-wonderland',
+    lng: 102.2833,
+    lat: 2.2333,
+    name: 'Melaka Wonderland',
+    description: 'Water theme park in Ayer Keroh',
+    imageUrl: '/images/wonderland.jpg',
+    category: 'Theme Park'
+  },
+  {
+    id: 'melaka-botanical-garden',
+    lng: 102.2833,
+    lat: 2.2500,
+    name: 'Melaka Botanical Garden',
+    description: 'Beautiful garden with various plant species',
+    imageUrl: '/images/botanical-garden.jpg',
+    category: 'Garden'
+  }
 ];
 
 // Move outside component to prevent re-creation on each render
@@ -79,17 +214,21 @@ export default function Map({
   const navigateToLocation = useCallback((location: LocationUI) => {
     if (!map.current || !isMapInitialized) return;
     
+    // Only perform actions if selecting a different location or re-selecting after null
+    const isNewSelection = selectedLocation !== location.id;
     setSelectedLocation(location.id);
     
-    map.current.flyTo({
-      center: [location.lng, location.lat],
-      zoom: 15,
-      essential: true
-    });
-    
+    // Close any open popups first to avoid visual glitches
+    if (selectedLocation && locationMarkers.current[selectedLocation]) {
+      locationMarkers.current[selectedLocation].getPopup();
+    }
+
     // Add markers if they don't exist yet
     if (!locationMarkers.current[location.id] && map.current) {
-      const popup = new maplibregl.Popup({ offset: 25 })
+      const popup = new maplibregl.Popup({ 
+        offset: 25,
+        closeButton: false // Cleaner look
+      })
         .setHTML(`
           <div>
             <h3 class="font-medium">${location.name}</h3>
@@ -114,11 +253,25 @@ export default function Map({
       locationMarkers.current[location.id] = marker;
     }
     
-    // Show popup for the location
+    // Fly to location with smooth animation
+    map.current.flyTo({
+      center: [location.lng, location.lat],
+      zoom: 16,
+      essential: true,
+      duration: 2000, // Add a 2 second animation
+      padding: { top: 50, bottom: 150, left: 50, right: 50 }, // Add padding for better view
+      curve: 1.42 // Ease-in-out curve for smooth motion
+    });
+    
+    // Show popup for the location with slight delay to ensure smoother animation
     if (locationMarkers.current[location.id]) {
-      locationMarkers.current[location.id].togglePopup();
+      setTimeout(() => {
+        if (isNewSelection && locationMarkers.current[location.id]) {
+          locationMarkers.current[location.id].togglePopup();
+        }
+      }, 1000);
     }
-  }, [isMapInitialized]);
+  }, [isMapInitialized, selectedLocation]);
 
   // Memoize getUserLocation function to prevent recreation on every render
   const getUserLocation = useCallback(() => {
@@ -288,7 +441,7 @@ export default function Map({
       {/* Location cards at the bottom */}
       <div className="absolute bottom-4 left-0 right-0 z-10 px-4">
         <div className="flex overflow-x-auto gap-3 pb-1">
-          {predefinedLocations.map((location) => (
+          {locations.map((location) => (
             <div
               key={location.id}
               onClick={() => navigateToLocation(location)}
