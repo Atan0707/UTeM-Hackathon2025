@@ -172,33 +172,6 @@ export const locations: LocationUI[] = [
         category: 'Attraction'
     },
     {
-        id: 'mahkota-parade',
-        lng: 102.2497642386984,
-        lat: 2.1894375051968415,
-        name: 'Mahkota Parade',
-        description: 'Mahkota Parade is a shopping mall in Melaka',
-        imageUrl: '/images/mahkota-parade.jpg',
-        category: 'Shopping'
-      },
-      {
-        id: 'aeon-ayer-keroh',
-        lng: 102.24635890095817,
-        lat: 2.214867083728227,
-        name: 'Aeon Ayer Keroh',
-        description: 'Aeon Ayer Keroh is a shopping mall in Melaka',
-        imageUrl: '/images/aeon-ayer-keroh.jpg',
-        category: 'Shopping'
-      },
-      {
-        id: 'melaka-premium-outlets',
-        lng: 102.20417570047923,
-        lat: 2.4436710205321597,
-        name: 'Melaka Premium Outlets',
-        description: 'Melaka Premium Outlets is a shopping mall in Melaka',
-        imageUrl: '/images/melaka-premium-outlets.jpg',
-        category: 'Shopping'
-      },
-      {
         id: 'taman-buaya-&-rekreasi-melaka',
         lng: 102.29799942119904,
         lat: 2.27718336006831,
@@ -206,8 +179,8 @@ export const locations: LocationUI[] = [
         description: 'Taman Buaya & Rekreasi Melaka is a recreational park in Melaka',
         imageUrl: '/images/taman-buaya-rekreasi-melaka.jpg',
         category: 'Attraction'
-      },
-      {
+    },
+    {
         id: 'a-famosa-water-park',
         lng: 102.21270346749017,
         lat: 2.4270136340135995,
@@ -215,8 +188,8 @@ export const locations: LocationUI[] = [
         description: 'A Famosa Water Park is a water park in Melaka',
         imageUrl: '/images/a-famosa-water-park.jpg',
         category: 'Attraction'
-      },
-      {
+    },
+    {
         id: 'pantai-pengkalan-balak',
         lng: 102.06972492126252,
         lat: 2.322167512168488,
@@ -224,8 +197,8 @@ export const locations: LocationUI[] = [
         description: 'Pantai Pengkalan Balak is a beach in Melaka',
         imageUrl: '/images/pantai-pengkalan-balak.jpg',
         category: 'Attraction'
-      },
-      {
+    },
+    {
         id: 'pantai-puteri-melaka',
         lng: 102.137364978482,
         lat: 2.2485077872946335,
@@ -233,7 +206,70 @@ export const locations: LocationUI[] = [
         description: 'Pantai Puteri Melaka is a beach in Melaka',
         imageUrl: '/images/pantai-puteri-melaka.jpg',
         category: 'Attraction'
-      }
+    },
+    {
+        id: 'universiti-teknologi-malaysia',
+        lng: 102.3211164,
+        lat: 2.313839880353972,
+        name: 'Universiti Teknologi Malaysia (UTeM)',
+        description: 'Universiti Teknologi Malaysia is a university in Melaka',
+        imageUrl: '/images/utem.jpg',
+        category: 'University'
+    },
+    {
+        id: 'universiti-teknologi-mara-jasin',
+        lng: 102.45311550001307,
+        lat: 2.221589373920741,
+        name: 'Universiti Teknologi MARA (UiTM) Cawangan Jasin',
+        description: 'Universiti Teknologi MARA Cawangan Jasin is a university in Melaka',
+        imageUrl: '/images/uitm-jasin.jpg',
+        category: 'University'
+    },
+    {
+        id: 'universiti-teknologi-mara-alor-gajah',
+        lng: 102.17966728651591,
+        lat: 2.3617861789269705,
+        name: 'Universiti Teknologi MARA (UiTM) Cawangan Alor Gajah',
+        description: 'Universiti Teknologi MARA Cawangan Alor Gajah is a university in Melaka',
+        imageUrl: '/images/uitm-alor-gajah.jpg',
+        category: 'University'
+    },
+    {
+        id: 'universiti-teknologi-mara-bandaraya-melaka',
+        lng: 102.24650639426702,
+        lat: 2.2052611598851395,
+        name: 'Universiti Teknologi MARA (UiTM) Cawangan Bandaraya Melaka',
+        description: 'Universiti Teknologi MARA Cawangan Bandaraya Melaka is a university in Melaka',
+        imageUrl: '/images/uitm-bandaraya-melaka.jpg',
+        category: 'University'
+    },
+    {
+        id: 'dutch_square_melaka',
+        lng: 102.24898609990218,
+        lat: 2.194366299993775,
+        name: 'Dutch Square (Red Square) Melaka',
+        description: 'Dutch Square Melaka is a heritage site in Melaka',
+        imageUrl: '/images/dutch-square-melaka.jpg',
+        category: 'Heritage'
+    },
+    {
+        id: 'a_famosa',
+        lng: 102.25036511768734,
+        lat: 2.1918068407366365,
+        name: 'A Famosa',
+        description: 'A Famosa is a heritage site in Melaka',
+        imageUrl: '/images/a-famosa.jpg',
+        category: 'Heritage'
+    },
+    {
+        id: 'baba_nyonya_heritage_museum',
+        lng: 102.24670717116419,
+        lat: 2.1953489209612407,
+        name: 'Baba & Nyonya Heritage Museum',
+        description: 'Baba & Nyonya Heritage Museum is a heritage site in Melaka',
+        imageUrl: '/images/baba-nyonya.jpg',
+        category: 'Heritage'
+    },
 ]
 
 // Add this helper function to your data.tsx file
