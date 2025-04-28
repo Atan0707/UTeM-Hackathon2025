@@ -170,7 +170,70 @@ export const locations: LocationUI[] = [
         description: 'Beautiful garden with various plant species',
         imageUrl: '/images/botanical-garden.jpg',
         category: 'Attraction'
-    }
+    },
+    {
+        id: 'mahkota-parade',
+        lng: 102.2497642386984,
+        lat: 2.1894375051968415,
+        name: 'Mahkota Parade',
+        description: 'Mahkota Parade is a shopping mall in Melaka',
+        imageUrl: '/images/mahkota-parade.jpg',
+        category: 'Shopping'
+      },
+      {
+        id: 'aeon-ayer-keroh',
+        lng: 102.24635890095817,
+        lat: 2.214867083728227,
+        name: 'Aeon Ayer Keroh',
+        description: 'Aeon Ayer Keroh is a shopping mall in Melaka',
+        imageUrl: '/images/aeon-ayer-keroh.jpg',
+        category: 'Shopping'
+      },
+      {
+        id: 'melaka-premium-outlets',
+        lng: 102.20417570047923,
+        lat: 2.4436710205321597,
+        name: 'Melaka Premium Outlets',
+        description: 'Melaka Premium Outlets is a shopping mall in Melaka',
+        imageUrl: '/images/melaka-premium-outlets.jpg',
+        category: 'Shopping'
+      },
+      {
+        id: 'taman-buaya-&-rekreasi-melaka',
+        lng: 102.29799942119904,
+        lat: 2.27718336006831,
+        name: 'Taman Buaya & Rekreasi Melaka',
+        description: 'Taman Buaya & Rekreasi Melaka is a recreational park in Melaka',
+        imageUrl: '/images/taman-buaya-rekreasi-melaka.jpg',
+        category: 'Attraction'
+      },
+      {
+        id: 'a-famosa-water-park',
+        lng: 102.21270346749017,
+        lat: 2.4270136340135995,
+        name: 'A Famosa Water Park',
+        description: 'A Famosa Water Park is a water park in Melaka',
+        imageUrl: '/images/a-famosa-water-park.jpg',
+        category: 'Attraction'
+      },
+      {
+        id: 'pantai-pengkalan-balak',
+        lng: 102.06972492126252,
+        lat: 2.322167512168488,
+        name: 'Pantai Pengkalan Balak',
+        description: 'Pantai Pengkalan Balak is a beach in Melaka',
+        imageUrl: '/images/pantai-pengkalan-balak.jpg',
+        category: 'Attraction'
+      },
+      {
+        id: 'pantai-puteri-melaka',
+        lng: 102.137364978482,
+        lat: 2.2485077872946335,
+        name: 'Pantai Puteri Melaka',
+        description: 'Pantai Puteri Melaka is a beach in Melaka',
+        imageUrl: '/images/pantai-puteri-melaka.jpg',
+        category: 'Attraction'
+      }
 ]
 
 
