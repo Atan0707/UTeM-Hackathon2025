@@ -39,7 +39,7 @@ export default function Map({
   const navigateToLocation = useCallback((location: LocationUI) => {
     if (!map.current || !isMapInitialized) return;
     
-    const isNewSelection = selectedLocation !== location.id;
+    // Set both states immediately
     setSelectedLocation(location.id);
     setDialogLocation(location);
 
@@ -53,7 +53,7 @@ export default function Map({
 
     // Add markers if they don't exist yet
     if (!locationMarkers.current[location.id] && map.current) {
-      const popup = new maplibregl.Popup({
+      const popup = new maplibregl.Popup({ 
         offset: 25,
         closeButton: false
       })
@@ -64,7 +64,7 @@ export default function Map({
             <p class="text-xs text-gray-500 mt-1">Lat: ${location.lat.toFixed(6)}, Lng: ${location.lng.toFixed(6)}</p>
           </div>
         `);
-
+      
       const el = document.createElement('div');
       el.className = 'location-marker';
       el.style.width = '30px';
@@ -79,26 +79,44 @@ export default function Map({
         .setLngLat([location.lng, location.lat])
         .setPopup(popup)
         .addTo(map.current);
-
+      
       locationMarkers.current[location.id] = marker;
     }
 
-    // Fly to location with exact coordinates
-    map.current.flyTo({
-      center: [location.lng, location.lat],
-      zoom: 16,
-      essential: true,
-      duration: 800,
-      padding: { top: 50, bottom: 150, left: 50, right: 50 },
-      curve: 1.42
-    });
 
-    // Show the popup when centering
-    if (locationMarkers.current[location.id]) {
-      setTimeout(() => {
-        locationMarkers.current[location.id].togglePopup();
-      }, 300)
+    // First zoom out from current location
+    if (selectedLocation && locationMarkers.current[selectedLocation]) {
+      const currentMarker = locationMarkers.current[selectedLocation];
+      const currentLngLat = currentMarker.getLngLat();
+      
+      map.current.flyTo({
+        center: [currentLngLat.lng, currentLngLat.lat],
+        zoom: 12,
+        essential: true,
+        duration: 1000,
+        curve: 1.42
+      });
     }
+
+    // Then fly to new location with a slight delay
+    setTimeout(() => {
+      if (map.current) {
+        map.current.flyTo({
+          center: [location.lng, location.lat],
+          zoom: 16,
+          essential: true,
+          duration: 2000,
+          padding: { top: 50, bottom: 150, left: 50, right: 50 },
+          curve: 1.42
+        });
+
+        // Show the popup after navigation
+        if (locationMarkers.current[location.id]) {
+          locationMarkers.current[location.id].togglePopup();
+        }
+      }
+    }, 1000);
+
   }, [isMapInitialized, selectedLocation]);
 
   // Memoize getUserLocation function to prevent recreation on every render
@@ -231,6 +249,17 @@ export default function Map({
       }
     };
   }, [center, zoom, style]);
+
+  // Add a useEffect to handle dialog visibility
+  useEffect(() => {
+    if (dialogLocation) {
+      // Force dialog to show immediately when location changes
+      const dialog = document.getElementById('location-dialog');
+      if (dialog) {
+        dialog.style.display = 'block';
+      }
+    }
+  }, [dialogLocation]);
 
   return (
     <div className="relative w-full h-full" style={{ minHeight: "400px" }}>
