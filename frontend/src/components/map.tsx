@@ -9,6 +9,9 @@ interface MapProps {
   style?: string;
   center?: [number, number];
   zoom?: number;
+  pitch?: number;
+  bearing?: number;
+  enable3DBuildings?: boolean;
 }
 
 // Move outside component to prevent re-creation on each render
@@ -23,7 +26,10 @@ const getMapStyle = () => {
 export default function Map({
   style = getMapStyle(),
   center = [102.3217, 2.3153],
-  zoom = 12
+  zoom = 12,
+  pitch = 45,
+  bearing = -17.6,
+  enable3DBuildings = false
 }: MapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
@@ -52,6 +58,60 @@ export default function Map({
     // Set both states immediately
     setSelectedLocation(location.id);
     setDialogLocation(location);
+
+    // Create or update marker for the selected location
+    if (!locationMarkers.current[location.id]) {
+      // Create a new marker with category emoji
+      const markerElement = document.createElement('div');
+      markerElement.className = 'marker';
+      markerElement.style.width = '40px';
+      markerElement.style.height = '40px';
+      markerElement.style.backgroundColor = 'white';
+      markerElement.style.borderRadius = '50%';
+      markerElement.style.display = 'flex';
+      markerElement.style.alignItems = 'center';
+      markerElement.style.justifyContent = 'center';
+      markerElement.style.fontSize = '20px';
+      markerElement.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+      markerElement.style.border = '2px solid #4a90e2';
+      markerElement.innerHTML = getCategoryEmoji(location.category);
+
+      // Create popup content
+      const popupContent = document.createElement('div');
+      popupContent.className = 'popup-content';
+      popupContent.innerHTML = `
+        <div class="p-2">
+          <h3 class="font-bold text-sm">${location.name}</h3>
+          <p class="text-xs text-gray-600">${location.description}</p>
+        </div>
+      `;
+
+      // Create and add marker
+      const marker = new maplibregl.Marker({
+        element: markerElement,
+        anchor: 'bottom'
+      })
+        .setLngLat([location.lng, location.lat])
+        .setPopup(new maplibregl.Popup({ offset: 25 })
+          .setDOMContent(popupContent))
+        .addTo(map.current);
+
+      locationMarkers.current[location.id] = marker;
+    } else {
+      // Update existing marker's popup
+      const popupContent = document.createElement('div');
+      popupContent.className = 'popup-content';
+      popupContent.innerHTML = `
+        <div class="p-2">
+          <h3 class="font-bold text-sm">${location.name}</h3>
+          <p class="text-xs text-gray-600">${location.description}</p>
+        </div>
+      `;
+      locationMarkers.current[location.id].setPopup(
+        new maplibregl.Popup({ offset: 25 })
+          .setDOMContent(popupContent)
+      );
+    }
 
     // Close any open popups first to avoid visual glitches
     if (selectedLocation && locationMarkers.current[selectedLocation]) {
@@ -186,7 +246,6 @@ export default function Map({
         userMarker.current.togglePopup();
       }
 
-      // Show the popup when centering
       //userMarker.current.togglePopup();
     } else if (!userLocation) {
       console.log('No user location available, requesting location');
@@ -268,6 +327,71 @@ export default function Map({
         if (map.current) { // Add null check here
           map.current.addControl(new maplibregl.NavigationControl(), 'top-right');
           setIsMapInitialized(true);
+
+          // --- 3D Buildings Layer Logic ---
+          if (enable3DBuildings && process.env.NEXT_PUBLIC_MAPTILER_API_KEY) {
+            const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_API_KEY;
+            const map = maplibregl as any;
+            // Find the first symbol layer with a text-field to insert below
+            const layers = map.current.getStyle().layers;
+            let labelLayerId = undefined;
+            for (let i = 0; i < layers.length; i++) {
+              if (layers[i].type === 'symbol' && layers[i].layout && layers[i].layout['text-field']) {
+                labelLayerId = layers[i].id;
+                break;
+              }
+            }
+            // Add the OpenMapTiles vector source for buildings
+            if (!map.current.getSource('openmaptiles')) {
+              map.current.addSource('openmaptiles', {
+                url: `https://api.maptiler.com/tiles/v3/tiles.json?key=${MAPTILER_KEY}`,
+                type: 'vector',
+              });
+            }
+            // Add the 3D buildings layer with enhanced visibility
+            if (!map.current.getLayer('3d-buildings')) {
+              map.current.addLayer(
+                {
+                  'id': '3d-buildings',
+                  'source': 'openmaptiles',
+                  'source-layer': 'building',
+                  'type': 'fill-extrusion',
+                  'minzoom': 14, // Show buildings at lower zoom level
+                  'filter': ['!=', ['get', 'hide_3d'], true],
+                  'paint': {
+                    'fill-extrusion-color': [
+                      'interpolate',
+                      ['linear'],
+                      ['get', 'render_height'],
+                      0, '#e0e0e0', // Light gray for low buildings
+                      50, '#a8c7ff', // Light blue for medium buildings
+                      100, '#4d8eff', // Blue for tall buildings
+                      200, '#1a4dff', // Dark blue for very tall buildings
+                      400, '#001a66'  // Very dark blue for skyscrapers
+                    ],
+                    'fill-extrusion-height': [
+                      'interpolate',
+                      ['linear'],
+                      ['zoom'],
+                      14, 0,
+                      15, ['*', ['get', 'render_height'], 1.2], // Increase height by 20%
+                      16, ['*', ['get', 'render_height'], 1.2]
+                    ],
+                    'fill-extrusion-base': ['case',
+                      ['>=', ['get', 'zoom'], 15],
+                      ['get', 'render_min_height'], 0
+                    ],
+                    'fill-extrusion-opacity': 0.9, // More opaque
+                    'fill-extrusion-ambient-occlusion': true, // Add ambient occlusion
+                    'fill-extrusion-ambient-occlusion-intensity': 0.3, // Control occlusion intensity
+                    'fill-extrusion-ambient-occlusion-radius': 2 // Control occlusion radius
+                  }
+                },
+                labelLayerId
+              );
+            }
+          }
+          // --- End 3D Buildings Layer Logic ---
         }
       });
 
