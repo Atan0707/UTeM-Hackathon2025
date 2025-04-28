@@ -11,8 +11,8 @@ interface MapProps {
 }
 
 export default function Map({ 
-  style = 'https://api.maptiler.com/maps/streets/style.json?key=eZi5RtifNKHdmYuidZGU',
-  center = [101.6869, 3.1390], // Default to Kuala Lumpur coordinates
+  style = 'https://api.maptiler.com/maps/streets/style.json?key=EJsqIOpsUVhXXofk2osf',
+  center = [102.3217, 2.3153],
   zoom = 12 
 }: MapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -39,7 +39,7 @@ export default function Map({
   return (
     <div 
       ref={mapContainer} 
-      className="w-full h-[500px] rounded-lg"
+      className="w-full h-full"
     />
   );
 }

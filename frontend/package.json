@@ -24,12 +24,6 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.1",
     "tailwindcss": "^4",
-<<<<<<< HEAD
     "typescript": "^5"
-=======
-    "typescript": "^5",
-    "postcss": "...",
-    "autoprefixer": "..."
->>>>>>> 21c6277b31eadf95d2d00263dfe170778ab71c59
   }
 }
