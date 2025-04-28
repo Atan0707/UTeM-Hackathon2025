@@ -3,188 +3,13 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { LocationUI, locations, getCategoryEmoji } from '../data';
 
 interface MapProps {
   style?: string;
   center?: [number, number];
   zoom?: number;
 }
-
-// Define location UI
-interface LocationUI {
-  id: string;
-  lng: number;
-  lat: number;
-  name: string;
-  description: string;
-  imageUrl: string;
-  category?: string;
-}
-
-const locations = [
-  {
-    id: 'uitm',
-    lng: 102.32110030660994,
-    lat: 2.313769491462733,
-    name: 'UTeM',
-    description: 'Universiti Teknikal Malaysia Melaka',
-    imageUrl: '/images/utem.jpg',
-    category: 'University'
-  },
-  {
-    id: 'a-famosa',
-    lng: 2.19180409454915, 
-    lat: 102.2503687014021,
-    name: 'A Famosa',
-    description: 'Historical Portuguese fortress built in 1511',
-    imageUrl: '/images/a-famosa.jpg',
-    category: 'Historical Site'
-  },
-  {
-    id: 'st-pauls-church',
-    lng: 102.2497,
-    lat: 2.1942,
-    name: 'St. Paul\'s Church',
-    description: '16th-century church with historical significance',
-    imageUrl: '/images/st-pauls.jpg',
-    category: 'Historical Site'
-  },
-  {
-    id: 'christ-church',
-    lng: 102.2483,
-    lat: 2.1961,
-    name: 'Christ Church',
-    description: 'Iconic red Dutch church in Melaka',
-    imageUrl: '/images/christ-church.jpg',
-    category: 'Historical Site'
-  },
-  {
-    id: 'jonker-street',
-    lng: 102.2467,
-    lat: 2.1964,
-    name: 'Jonker Street',
-    description: 'Famous night market and shopping street',
-    imageUrl: '/images/jonker-street.jpg',
-    category: 'Shopping'
-  },
-  {
-    id: 'melaka-sultanate-palace',
-    lng: 102.2506,
-    lat: 2.1939,
-    name: 'Melaka Sultanate Palace',
-    description: 'Replica of the 15th-century palace of Sultan Mansur Shah',
-    imageUrl: '/images/sultanate-palace.jpg',
-    category: 'Museum'
-  },
-  {
-    id: 'maritime-museum',
-    lng: 102.2486,
-    lat: 2.1947,
-    name: 'Maritime Museum',
-    description: 'Museum showcasing Melaka\'s maritime history',
-    imageUrl: '/images/maritime-museum.jpg',
-    category: 'Museum'
-  },
-  {
-    id: 'baba-nyonya-heritage-museum',
-    lng: 102.2469,
-    lat: 2.1962,
-    name: 'Baba & Nyonya Heritage Museum',
-    description: 'Museum of Peranakan culture and history',
-    imageUrl: '/images/baba-nyonya.jpg',
-    category: 'Museum'
-  },
-  {
-    id: 'menara-taming-sari',
-    lng: 102.2489,
-    lat: 2.1956,
-    name: 'Menara Taming Sari',
-    description: 'Revolving tower offering panoramic views of Melaka',
-    imageUrl: '/images/taming-sari.jpg',
-    category: 'Attraction'
-  },
-  {
-    id: 'melaka-river-cruise',
-    lng: 102.2478,
-    lat: 2.1958,
-    name: 'Melaka River Cruise',
-    description: 'Scenic boat ride along the Melaka River',
-    imageUrl: '/images/river-cruise.jpg',
-    category: 'Attraction'
-  },
-  {
-    id: 'cheng-hoon-teng-temple',
-    lng: 102.2472,
-    lat: 2.1966,
-    name: 'Cheng Hoon Teng Temple',
-    description: 'Oldest Chinese temple in Malaysia',
-    imageUrl: '/images/cheng-hoon-teng.jpg',
-    category: 'Temple'
-  },
-  {
-    id: 'kampung-kling-mosque',
-    lng: 102.2475,
-    lat: 2.1968,
-    name: 'Kampung Kling Mosque',
-    description: 'One of the oldest mosques in Melaka',
-    imageUrl: '/images/kampung-kling.jpg',
-    category: 'Mosque'
-  },
-  {
-    id: 'st-francis-xavier-church',
-    lng: 102.2492,
-    lat: 2.1945,
-    name: 'St. Francis Xavier Church',
-    description: '19th-century Gothic-style church',
-    imageUrl: '/images/st-francis.jpg',
-    category: 'Church'
-  },
-  {
-    id: 'melaka-zoo',
-    lng: 102.3167,
-    lat: 2.2667,
-    name: 'Melaka Zoo',
-    description: 'Second largest zoo in Malaysia',
-    imageUrl: '/images/melaka-zoo.jpg',
-    category: 'Attraction'
-  },
-  {
-    id: 'klebang-beach',
-    lng: 102.2000,
-    lat: 2.2167,
-    name: 'Klebang Beach',
-    description: 'Popular beach with coconut shake stalls',
-    imageUrl: '/images/klebang-beach.jpg',
-    category: 'Beach'
-  },
-  {
-    id: 'melaka-bird-park',
-    lng: 102.3000,
-    lat: 2.2500,
-    name: 'Melaka Bird Park',
-    description: 'Home to various species of birds',
-    imageUrl: '/images/bird-park.jpg',
-    category: 'Attraction'
-  },
-  {
-    id: 'melaka-wonderland',
-    lng: 102.2833,
-    lat: 2.2333,
-    name: 'Melaka Wonderland',
-    description: 'Water theme park in Ayer Keroh',
-    imageUrl: '/images/wonderland.jpg',
-    category: 'Theme Park'
-  },
-  {
-    id: 'melaka-botanical-garden',
-    lng: 102.2833,
-    lat: 2.2500,
-    name: 'Melaka Botanical Garden',
-    description: 'Beautiful garden with various plant species',
-    imageUrl: '/images/botanical-garden.jpg',
-    category: 'Garden'
-  }
-];
 
 // Move outside component to prevent re-creation on each render
 const getMapStyle = () => {
@@ -195,10 +20,10 @@ const getMapStyle = () => {
   return 'https://demotiles.maplibre.org/style.json';
 };
 
-export default function Map({ 
+export default function Map({
   style = getMapStyle(),
   center = [102.3217, 2.3153],
-  zoom = 12 
+  zoom = 12
 }: MapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
@@ -208,88 +33,91 @@ export default function Map({
   const [isMapInitialized, setIsMapInitialized] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+  const [dialogLocation, setDialogLocation] = useState<LocationUI | null>(null);
   const locationRequestedRef = useRef(false);
 
-  // Function to navigate to a location when card is clicked
   const navigateToLocation = useCallback((location: LocationUI) => {
     if (!map.current || !isMapInitialized) return;
     
-    // Only perform actions if selecting a different location or re-selecting after null
     const isNewSelection = selectedLocation !== location.id;
     setSelectedLocation(location.id);
-    
+    setDialogLocation(location);
+
     // Close any open popups first to avoid visual glitches
     if (selectedLocation && locationMarkers.current[selectedLocation]) {
-      locationMarkers.current[selectedLocation].getPopup();
+      const popup = locationMarkers.current[selectedLocation].getPopup();
+      if (popup && popup.isOpen()) {
+        popup.remove();
+      }
     }
 
     // Add markers if they don't exist yet
     if (!locationMarkers.current[location.id] && map.current) {
-      const popup = new maplibregl.Popup({ 
+      const popup = new maplibregl.Popup({
         offset: 25,
-        closeButton: false // Cleaner look
+        closeButton: false
       })
         .setHTML(`
           <div>
             <h3 class="font-medium">${location.name}</h3>
             <p class="text-sm">${location.description}</p>
+            <p class="text-xs text-gray-500 mt-1">Lat: ${location.lat.toFixed(6)}, Lng: ${location.lng.toFixed(6)}</p>
           </div>
         `);
-      
+
       const el = document.createElement('div');
       el.className = 'location-marker';
-      el.style.backgroundColor = location.category === 'attraction' ? '#F7B731' : '#4B56D2';
-      el.style.width = '20px';
-      el.style.height = '20px';
-      el.style.borderRadius = '50%';
-      el.style.border = '2px solid white';
-      el.style.boxShadow = '0 0 0 2px rgba(0,0,0,0.1)';
-      
+      el.style.width = '30px';
+      el.style.height = '30px';
+      el.style.backgroundImage = 'url(/images/marker.png)';
+      el.style.backgroundSize = 'contain';
+      el.style.backgroundRepeat = 'no-repeat';
+      el.style.cursor = 'pointer';
+
+      // Set the marker position with exact coordinates
       const marker = new maplibregl.Marker(el)
         .setLngLat([location.lng, location.lat])
         .setPopup(popup)
         .addTo(map.current);
-      
+
       locationMarkers.current[location.id] = marker;
     }
-    
-    // Fly to location with smooth animation
+
+    // Fly to location with exact coordinates
     map.current.flyTo({
       center: [location.lng, location.lat],
       zoom: 16,
       essential: true,
-      duration: 2000, // Add a 2 second animation
-      padding: { top: 50, bottom: 150, left: 50, right: 50 }, // Add padding for better view
-      curve: 1.42 // Ease-in-out curve for smooth motion
+      duration: 2000,
+      padding: { top: 50, bottom: 150, left: 50, right: 50 },
+      curve: 1.42
     });
-    
-    // Show popup for the location with slight delay to ensure smoother animation
+
+    // Show the popup when centering
     if (locationMarkers.current[location.id]) {
-      setTimeout(() => {
-        if (isNewSelection && locationMarkers.current[location.id]) {
-          locationMarkers.current[location.id].togglePopup();
-        }
-      }, 1000);
+      locationMarkers.current[location.id].togglePopup();
     }
+  
+    // No delayed popup toggle - the dialog will show immediately instead
   }, [isMapInitialized, selectedLocation]);
 
   // Memoize getUserLocation function to prevent recreation on every render
   const getUserLocation = useCallback(() => {
     // Your existing getUserLocation implementation
     if (locationRequestedRef.current || !navigator.geolocation || !map.current || !isMapInitialized) return;
-    
+
     console.log("Getting user location...");
     locationRequestedRef.current = true;
-    
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         console.log("Location received:", position.coords.latitude, position.coords.longitude);
         const lng = position.coords.longitude;
         const lat = position.coords.latitude;
-        
+
         // Store user location for the button
         setUserLocation([lng, lat]);
-        
+
         // Center map on user's location
         if (map.current) {
           map.current.flyTo({
@@ -314,31 +142,59 @@ export default function Map({
 
   // Function to center map on user location
   const showUserLocation = useCallback(() => {
+    console.log('showUserLocation called', { userLocation, isMapInitialized });
+
     if (userLocation && map.current && isMapInitialized) {
+      console.log('Creating/updating user marker at:', userLocation);
+
       map.current.flyTo({
         center: userLocation,
         zoom: 15,
         essential: true
       });
-      
+
       // Show the popup when centering
       if (userMarker.current) {
         userMarker.current.togglePopup();
       }
+
+      // Show the popup when centering
+      //userMarker.current.togglePopup();
     } else if (!userLocation) {
-      // If we don't have the location yet, try to get it
+      console.log('No user location available, requesting location');
       getUserLocation();
     }
   }, [userLocation, isMapInitialized, getUserLocation]);
 
+  // Get user location after map is initialized
+  useEffect(() => {
+    if (isMapInitialized) {
+      console.log('Map initialized, requesting user location');
+      // Add delay to ensure map is ready
+      const timer = setTimeout(() => {
+        getUserLocation();
+      }, 500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isMapInitialized, getUserLocation]);
+
+  // Update user marker when location changes
+  useEffect(() => {
+    if (userLocation && map.current && isMapInitialized && userMarker.current) {
+      console.log('Updating user marker position due to location change:', userLocation);
+      userMarker.current.setLngLat(userLocation);
+    }
+  }, [userLocation, isMapInitialized]);
+
   // Your existing useEffect code for initializing map
   useEffect(() => {
     if (map.current || !mapContainer.current) return;
-    
+
     try {
       const mapStyle = style;
       console.log("Using map style:", mapStyle); // For debugging
-      
+
       map.current = new maplibregl.Map({
         container: mapContainer.current,
         style: mapStyle,
@@ -346,7 +202,7 @@ export default function Map({
         zoom,
         attributionControl: false // Reduce network requests for attribution tiles
       });
-      
+
       // Wait for the map to load before adding controls or markers
       map.current.on('load', () => {
         console.log("Map loaded successfully");
@@ -355,14 +211,14 @@ export default function Map({
           setIsMapInitialized(true);
         }
       });
-      
+
       map.current.on('error', (e) => {
         console.error('Map error:', e);
       });
     } catch (err) {
       console.error('Error initializing map:', err);
     }
-    
+
     return () => {
       locationRequestedRef.current = false;
       if (map.current) {
@@ -376,29 +232,17 @@ export default function Map({
     };
   }, [center, zoom, style]);
 
-  // Get user location after map is initialized
-  useEffect(() => {
-    if (isMapInitialized) {
-      // Add delay to ensure map is ready
-      const timer = setTimeout(() => {
-        getUserLocation();
-      }, 500);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [isMapInitialized, getUserLocation]);
-
   return (
     <div className="relative w-full h-full" style={{ minHeight: "400px" }}>
-      <div 
-        ref={mapContainer} 
+      <div
+        ref={mapContainer}
         className="w-full h-full"
       />
-      
+
       {locationError && (
         <div className="absolute top-2 left-2 right-2 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded z-20">
           <p>{locationError}</p>
-          <button 
+          <button
             onClick={() => {
               setLocationError(null);
               locationRequestedRef.current = false;
@@ -410,12 +254,12 @@ export default function Map({
           </button>
         </div>
       )}
-      
+
       {/* Button to get initial location if not yet obtained */}
       {!userLocation && !locationError && isMapInitialized && (
         <button
           onClick={getUserLocation}
-          className="absolute bottom-32 right-6 bg-green-600 hover:bg-green-700 text-white font-medium rounded-full p-3 shadow-lg transition-colors z-10 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="absolute bottom-48 right-6 bg-green-600 hover:bg-green-700 text-white font-medium rounded-full p-3 shadow-lg transition-colors z-10 focus:outline-none focus:ring-2 focus:ring-green-500"
           aria-label="Get my location"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -423,12 +267,12 @@ export default function Map({
           </svg>
         </button>
       )}
-      
+
       {/* Button to center on existing location */}
       {userLocation && (
         <button
           onClick={showUserLocation}
-          className="absolute bottom-32 right-6 bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-full p-3 shadow-lg transition-colors z-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="absolute bottom-48 right-6 bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-full p-3 shadow-lg transition-colors z-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
           aria-label="Show my location"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -437,33 +281,197 @@ export default function Map({
           </svg>
         </button>
       )}
-      
+
       {/* Location cards at the bottom */}
       <div className="absolute bottom-4 left-0 right-0 z-10 px-4">
-        <div className="flex overflow-x-auto gap-3 pb-1">
+        <div className="flex overflow-x-auto gap-3 pb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {locations.map((location) => (
             <div
               key={location.id}
               onClick={() => navigateToLocation(location)}
               className={`
                 flex-shrink-0 bg-white rounded-lg shadow-md p-3 cursor-pointer
-                w-56 transition-all duration-200
-                ${selectedLocation === location.id ? 'shadow-xl transform -translate-y-1' : 'hover:shadow-lg'}
+                w-56 transition-all duration-300 ease-in-out border-2 border-black overflow-hidden
+                ${selectedLocation === location.id ? 'shadow-xl transform -translate-y-1' : 'hover:scale-105 hover:shadow-xl hover:border-black'}
               `}
             >
-              <h3 className="font-medium text-base truncate">{location.name}</h3>
+              <h3 className="font-medium text-base truncate text-blue-900">{location.name}</h3>
               <p className="text-gray-600 text-sm line-clamp-2 mt-1">{location.description}</p>
               <div className={`
-                mt-2 inline-block px-2 py-1 text-xs rounded-full
-                ${location.category === 'attraction' ? 'bg-yellow-100 text-yellow-700' : 
-                 location.category === 'University' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}
-              `}>
+                  mt-2 inline-block px-2 py-1 text-xs rounded-full
+                ${location.category === 'Attraction' ? 'bg-yellow-100 text-yellow-700' :
+                  location.category === 'University' ? 'bg-blue-100 text-blue-700' :
+                    location.category === 'Shopping' ? 'bg-purple-100 text-purple-700' :
+                      location.category === 'Historical' ? 'bg-amber-100 text-amber-700' :
+                        'bg-gray-100 text-gray-700'}`}>
                 {location.category}
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Information Dialog */}
+      {dialogLocation && (
+        <div className="absolute top-4 left-4 bg-white rounded-lg shadow-lg p-4 z-20 max-w-xs w-full border border-gray-200 overflow-y-auto max-h-[calc(100vh-240px)]">
+          <div className="flex justify-between items-start mb-2">
+            <div className="flex items-center">
+              <span className="text-xl mr-2">{getCategoryEmoji(dialogLocation.category)}</span>
+              <h3 className="font-bold text-lg pr-6 text-blue-900">{dialogLocation.name}</h3>
+            </div>
+            <button
+              onClick={() => setDialogLocation(null)}
+              className="text-gray-500 hover:text-gray-700"
+              aria-label="Close details"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
+          </div>
+
+          {dialogLocation.imageUrl && (
+            <div className="mb-3 rounded-md overflow-hidden">
+              <img
+                src={dialogLocation.imageUrl}
+                alt={dialogLocation.name}
+                className="w-full h-32 object-cover"
+              />
+            </div>
+          )}
+
+          <p className="text-sm text-gray-600 mb-3">{dialogLocation.description}</p>
+
+          {/* Overall Rating */}
+          <div className="mb-3 flex items-center">
+            <div className="flex text-yellow-400 mr-1">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+              </svg>
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+              </svg>
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+              </svg>
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+              </svg>
+              <svg className="w-4 h-4" fill="gray" stroke="currentColor" strokeWidth="0.5" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+              </svg>
+            </div>
+            <p className="text-xs font-medium text-gray-700">4.0 (24 reviews)</p>
+          </div>
+
+          {/* Category Tag */}
+          <div className={`
+      mb-4 inline-block px-2 py-1 text-xs rounded-full
+      ${dialogLocation.category === 'Attraction' ? 'bg-yellow-100 text-yellow-700' :
+              dialogLocation.category === 'University' ? 'bg-blue-100 text-blue-700' :
+                dialogLocation.category === 'Shopping' ? 'bg-purple-100 text-purple-700' :
+                  dialogLocation.category === 'Heritage' ? 'bg-amber-100 text-amber-700' :
+                    'bg-gray-100 text-gray-700'}
+    `}>
+            {dialogLocation.category}
+          </div>
+
+          {/* User Reviews Section */}
+          <div className="mt-4 mb-3">
+            <h4 className="font-medium text-sm mb-2 text-blue-900">User Reviews</h4>
+
+            {/* Review 1 */}
+            <div className="mb-3 pb-3 border-b border-gray-100">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold text-gray-800">Ahmad Firdaus</p>
+                <div className="flex text-yellow-400">
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                </div>
+              </div>
+              <p className="text-xs text-gray-600 mt-1">Great place to visit! The ambiance is amazing and the staff are very friendly.</p>
+              <p className="text-[10px] text-gray-400 mt-1">2 days ago</p>
+            </div>
+
+            {/* Review 2 */}
+            <div className="mb-3 pb-3 border-b border-gray-100">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold text-gray-800">Sarah Tan</p>
+                <div className="flex text-yellow-400">
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <svg className="w-3 h-3" fill="gray" stroke="currentColor" strokeWidth="0.5" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                </div>
+              </div>
+              <p className="text-xs text-gray-600 mt-1">I love coming here on weekends. The prices are reasonable and the location is convenient.</p>
+              <p className="text-[10px] text-gray-400 mt-1">1 week ago</p>
+            </div>
+
+            {/* Review 3 */}
+            <div className="mb-3">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold text-gray-800">Mohd Raza</p>
+                <div className="flex text-yellow-400">
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <svg className="w-3 h-3" fill="gray" stroke="currentColor" strokeWidth="0.5" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <svg className="w-3 h-3" fill="gray" stroke="currentColor" strokeWidth="0.5" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                </div>
+              </div>
+              <p className="text-xs text-gray-600 mt-1">It was okay but could be better. The place is a bit crowded during weekends.</p>
+              <p className="text-[10px] text-gray-400 mt-1">3 weeks ago</p>
+            </div>
+          </div>
+
+          {/* Google Maps Link */}
+          <div className="mt-4">
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${dialogLocation.lat},${dialogLocation.lng}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full block text-center text-xs bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition"
+            >
+              Open in Google Maps
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
