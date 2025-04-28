@@ -24,8 +24,8 @@ interface LocationUI {
 const locations = [
   {
     id: 'uitm',
-    lng: 102.3217,
-    lat: 2.3153,
+    lng: 102.32110030660994,
+    lat: 2.313769491462733,
     name: 'UTeM',
     description: 'Universiti Teknikal Malaysia Melaka',
     imageUrl: '/images/utem.jpg',
@@ -33,8 +33,8 @@ const locations = [
   },
   {
     id: 'a-famosa',
-    lng: 102.2500,
-    lat: 2.1944,
+    lng: 2.19180409454915, 
+    lat: 102.2503687014021,
     name: 'A Famosa',
     description: 'Historical Portuguese fortress built in 1511',
     imageUrl: '/images/a-famosa.jpg',
