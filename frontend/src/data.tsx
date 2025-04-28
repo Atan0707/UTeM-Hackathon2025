@@ -293,6 +293,8 @@ export const getCategoryEmoji = (category?: string): string => {
         return '🌿';
       case 'historical':
         return '🏛️';
+      case 'university':
+        return '🎓';
       default:
         return '📍';
     }
