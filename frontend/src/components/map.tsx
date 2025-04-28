@@ -88,17 +88,17 @@ export default function Map({
       center: [location.lng, location.lat],
       zoom: 16,
       essential: true,
-      duration: 2000,
+      duration: 800,
       padding: { top: 50, bottom: 150, left: 50, right: 50 },
       curve: 1.42
     });
 
     // Show the popup when centering
     if (locationMarkers.current[location.id]) {
-      locationMarkers.current[location.id].togglePopup();
+      setTimeout(() => {
+        locationMarkers.current[location.id].togglePopup();
+      }, 300)
     }
-  
-    // No delayed popup toggle - the dialog will show immediately instead
   }, [isMapInitialized, selectedLocation]);
 
   // Memoize getUserLocation function to prevent recreation on every render
@@ -465,9 +465,7 @@ export default function Map({
               href={`https://www.google.com/maps/search/?api=1&query=${dialogLocation.lat},${dialogLocation.lng}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full block text-center text-xs bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition"
-            >
-              Open in Google Maps
+              className="w-full block text-center text-xs bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition">Open in Google Maps
             </a>
           </div>
         </div>
