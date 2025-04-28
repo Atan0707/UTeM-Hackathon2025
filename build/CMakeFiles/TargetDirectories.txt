@@ -1,0 +1,3 @@
+C:/Users/hariz/Desktop/UTeM-Hackathon2025/build/CMakeFiles/MySQLTestApp.dir
+C:/Users/hariz/Desktop/UTeM-Hackathon2025/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/hariz/Desktop/UTeM-Hackathon2025/build/CMakeFiles/ZERO_CHECK.dir
