@@ -41,11 +41,21 @@ export default function Map({
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [dialogLocation, setDialogLocation] = useState<LocationUI | null>(null);
   const locationRequestedRef = useRef(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+
+  // Get unique categories for filter
+  const categories = ['All', ...Array.from(new Set(locations.map(l => l.category || 'Other')))]
+    .filter((v, i, a) => a.indexOf(v) === i);
+
+  // Filtered locations
+  const filteredLocations = selectedCategory === 'All'
+    ? locations
+    : locations.filter(l => l.category === selectedCategory);
 
   const navigateToLocation = useCallback((location: LocationUI) => {
     if (!map.current || !isMapInitialized) return;
     
-    const isNewSelection = selectedLocation !== location.id;
+    // Set both states immediately
     setSelectedLocation(location.id);
     setDialogLocation(location);
 
@@ -111,6 +121,7 @@ export default function Map({
       }
     }
 
+<<<<<<< HEAD
     // Fly to location with exact coordinates
     map.current.flyTo({
       center: [location.lng, location.lat],
@@ -129,6 +140,75 @@ export default function Map({
       }, 300);
     }
   }, [isMapInitialized, selectedLocation, enable3DBuildings]);
+=======
+    // Add markers if they don't exist yet
+    if (!locationMarkers.current[location.id] && map.current) {
+      const popup = new maplibregl.Popup({ 
+        offset: 25,
+        closeButton: false
+      })
+        .setHTML(`
+          <div>
+            <h3 class="font-medium">${location.name}</h3>
+            <p class="text-sm">${location.description}</p>
+            <p class="text-xs text-gray-500 mt-1">Lat: ${location.lat.toFixed(6)}, Lng: ${location.lng.toFixed(6)}</p>
+          </div>
+        `);
+      
+      const el = document.createElement('div');
+      el.className = 'location-marker';
+      el.style.width = '30px';
+      el.style.height = '30px';
+      el.style.backgroundImage = 'url(/images/marker.png)';
+      el.style.backgroundSize = 'contain';
+      el.style.backgroundRepeat = 'no-repeat';
+      el.style.cursor = 'pointer';
+
+      // Set the marker position with exact coordinates
+      const marker = new maplibregl.Marker(el)
+        .setLngLat([location.lng, location.lat])
+        .setPopup(popup)
+        .addTo(map.current);
+      
+      locationMarkers.current[location.id] = marker;
+    }
+
+
+    // First zoom out from current location
+    if (selectedLocation && locationMarkers.current[selectedLocation]) {
+      const currentMarker = locationMarkers.current[selectedLocation];
+      const currentLngLat = currentMarker.getLngLat();
+      
+      map.current.flyTo({
+        center: [currentLngLat.lng, currentLngLat.lat],
+        zoom: 12,
+        essential: true,
+        duration: 1000,
+        curve: 1.42
+      });
+    }
+
+    // Then fly to new location with a slight delay
+    setTimeout(() => {
+      if (map.current) {
+        map.current.flyTo({
+          center: [location.lng, location.lat],
+          zoom: 16,
+          essential: true,
+          duration: 2000,
+          padding: { top: 50, bottom: 150, left: 50, right: 50 },
+          curve: 1.42
+        });
+
+        // Show the popup after navigation
+        if (locationMarkers.current[location.id]) {
+          locationMarkers.current[location.id].togglePopup();
+        }
+      }
+    }, 1000);
+
+  }, [isMapInitialized, selectedLocation]);
+>>>>>>> b4a5fded5b3ab09c69645f61aa8619947b708fb9
 
   // Memoize getUserLocation function to prevent recreation on every render
   const getUserLocation = useCallback(() => {
@@ -214,6 +294,37 @@ export default function Map({
       userMarker.current.setLngLat(userLocation);
     }
   }, [userLocation, isMapInitialized]);
+
+  // Update: Only show markers for filtered locations
+  // Remove markers for locations not in filteredLocations
+  useEffect(() => {
+    if (!map.current) return;
+    // Remove all markers
+    Object.keys(locationMarkers.current).forEach(id => {
+      if (!filteredLocations.find(l => l.id === id)) {
+        locationMarkers.current[id]?.remove();
+        delete locationMarkers.current[id];
+      }
+    });
+    // Add markers for filtered locations if not present
+    filteredLocations.forEach(location => {
+      if (!locationMarkers.current[location.id]) {
+        // Marker creation logic (copy from navigateToLocation)
+        const el = document.createElement('div');
+        el.className = 'location-marker';
+        el.style.width = '30px';
+        el.style.height = '30px';
+        el.style.backgroundImage = 'url(/images/marker.png)';
+        el.style.backgroundSize = 'contain';
+        el.style.backgroundRepeat = 'no-repeat';
+        el.style.cursor = 'pointer';
+        const marker = new maplibregl.Marker(el)
+          .setLngLat([location.lng, location.lat])
+          .addTo(map.current!);
+        locationMarkers.current[location.id] = marker;
+      }
+    });
+  }, [filteredLocations, map, locationMarkers]);
 
   // Your existing useEffect code for initializing map
   useEffect(() => {
@@ -325,6 +436,7 @@ export default function Map({
     };
   }, [center, zoom, style]);
 
+<<<<<<< HEAD
   // Add cleanup for markers when component unmounts
   useEffect(() => {
     return () => {
@@ -336,6 +448,18 @@ export default function Map({
       locationMarkers.current = {};
     };
   }, []);
+=======
+  // Add a useEffect to handle dialog visibility
+  useEffect(() => {
+    if (dialogLocation) {
+      // Force dialog to show immediately when location changes
+      const dialog = document.getElementById('location-dialog');
+      if (dialog) {
+        dialog.style.display = 'block';
+      }
+    }
+  }, [dialogLocation]);
+>>>>>>> b4a5fded5b3ab09c69645f61aa8619947b708fb9
 
   return (
     <div className="relative w-full h-full" style={{ minHeight: "400px" }}>
@@ -387,6 +511,7 @@ export default function Map({
         </button>
       )}
 
+<<<<<<< HEAD
       {/* Button to toggle between basic and 3D maps */}
       <button
         onClick={() => {
@@ -405,16 +530,33 @@ export default function Map({
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
         </svg>
       </button>
+=======
+      {/* Category Filter UI */}
+      <div className="absolute left-0 right-0 top-2 z-20 flex justify-center">
+        <div className="bg-white rounded-full shadow px-4 py-2 flex gap-2 items-center">
+          {categories.map(category => (
+            <button
+              key={category}
+              className={`px-3 py-1 rounded-full font-medium text-sm transition
+                ${selectedCategory === category ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-700 hover:bg-blue-100'}`}
+              onClick={() => setSelectedCategory(category)}
+            >
+              {category !== 'All' && getCategoryEmoji(category)} {category}
+            </button>
+          ))}
+        </div>
+      </div>
+>>>>>>> b4a5fded5b3ab09c69645f61aa8619947b708fb9
 
       {/* Location cards at the bottom */}
       <div className="absolute bottom-4 left-0 right-0 z-10 px-4">
         <div className="flex overflow-x-auto gap-3 pb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          {locations.map((location) => (
+          {filteredLocations.map((location) => (
             <div
               key={location.id}
               onClick={() => navigateToLocation(location)}
               className={`
-                flex-shrink-0 bg-white rounded-lg shadow-md p-3 cursor-pointer
+                flex-shrink-0 bg-white rounded-lg shadow-md p-3 cursor-pointer relaxed-card-font
                 w-56 transition-all duration-300 ease-in-out border-2 border-black overflow-hidden
                 ${selectedLocation === location.id ? 'shadow-xl transform -translate-y-1' : 'hover:scale-105 hover:shadow-xl hover:border-black'}
               `}
