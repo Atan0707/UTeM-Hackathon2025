@@ -44,9 +44,7 @@ export default function Map({
               new maplibregl.Popup({ offset: 25 }).setHTML('<span style="color: black; font-weight: bold;">You are here</span>')
             )
             .addTo(map.current!)
-            .togglePopup(); // Open the popup by default
-          // Optionally, center the map on the user's location:
-          // map.current!.setCenter([lng, lat]);
+            .togglePopup();
         },
         (error) => {
           console.error('Error getting user location:', error);
