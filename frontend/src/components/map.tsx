@@ -35,6 +35,16 @@ export default function Map({
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [dialogLocation, setDialogLocation] = useState<LocationUI | null>(null);
   const locationRequestedRef = useRef(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+
+  // Get unique categories for filter
+  const categories = ['All', ...Array.from(new Set(locations.map(l => l.category || 'Other')))]
+    .filter((v, i, a) => a.indexOf(v) === i);
+
+  // Filtered locations
+  const filteredLocations = selectedCategory === 'All'
+    ? locations
+    : locations.filter(l => l.category === selectedCategory);
 
   const navigateToLocation = useCallback((location: LocationUI) => {
     if (!map.current || !isMapInitialized) return;
@@ -187,6 +197,37 @@ export default function Map({
     }
   }, [userLocation, isMapInitialized]);
 
+  // Update: Only show markers for filtered locations
+  // Remove markers for locations not in filteredLocations
+  useEffect(() => {
+    if (!map.current) return;
+    // Remove all markers
+    Object.keys(locationMarkers.current).forEach(id => {
+      if (!filteredLocations.find(l => l.id === id)) {
+        locationMarkers.current[id]?.remove();
+        delete locationMarkers.current[id];
+      }
+    });
+    // Add markers for filtered locations if not present
+    filteredLocations.forEach(location => {
+      if (!locationMarkers.current[location.id]) {
+        // Marker creation logic (copy from navigateToLocation)
+        const el = document.createElement('div');
+        el.className = 'location-marker';
+        el.style.width = '30px';
+        el.style.height = '30px';
+        el.style.backgroundImage = 'url(/images/marker.png)';
+        el.style.backgroundSize = 'contain';
+        el.style.backgroundRepeat = 'no-repeat';
+        el.style.cursor = 'pointer';
+        const marker = new maplibregl.Marker(el)
+          .setLngLat([location.lng, location.lat])
+          .addTo(map.current!);
+        locationMarkers.current[location.id] = marker;
+      }
+    });
+  }, [filteredLocations, map, locationMarkers]);
+
   // Your existing useEffect code for initializing map
   useEffect(() => {
     if (map.current || !mapContainer.current) return;
@@ -282,15 +323,31 @@ export default function Map({
         </button>
       )}
 
+      {/* Category Filter UI */}
+      <div className="absolute left-0 right-0 top-2 z-20 flex justify-center">
+        <div className="bg-white rounded-full shadow px-4 py-2 flex gap-2 items-center">
+          {categories.map(category => (
+            <button
+              key={category}
+              className={`px-3 py-1 rounded-full font-medium text-sm transition
+                ${selectedCategory === category ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-700 hover:bg-blue-100'}`}
+              onClick={() => setSelectedCategory(category)}
+            >
+              {category !== 'All' && getCategoryEmoji(category)} {category}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Location cards at the bottom */}
       <div className="absolute bottom-4 left-0 right-0 z-10 px-4">
         <div className="flex overflow-x-auto gap-3 pb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          {locations.map((location) => (
+          {filteredLocations.map((location) => (
             <div
               key={location.id}
               onClick={() => navigateToLocation(location)}
               className={`
-                flex-shrink-0 bg-white rounded-lg shadow-md p-3 cursor-pointer
+                flex-shrink-0 bg-white rounded-lg shadow-md p-3 cursor-pointer relaxed-card-font
                 w-56 transition-all duration-300 ease-in-out border-2 border-black overflow-hidden
                 ${selectedLocation === location.id ? 'shadow-xl transform -translate-y-1' : 'hover:scale-105 hover:shadow-xl hover:border-black'}
               `}
