@@ -70,6 +70,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <VcpkgAdditionalInstallOptions>--feature-flags="versions"</VcpkgAdditionalInstallOptions>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -107,6 +113,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>"C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\crow_all.h";C:\Users\hariz\Downloads\mysql-connector-c++-9.3.0-winx64;C:\Users\hariz\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64;C:\Users\hariz\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\lib64;C:\Users\hariz\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\include;C:\Users\hariz\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\include\mysql;C:\Users\hariz\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\include\jdbc;C:\Users\hariz\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\include\jdbc\cppconn,</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -138,6 +145,9 @@
     <None Include="..\..\..\..\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\lib64\libcrypto-3-x64.dll" />
     <None Include="..\..\..\..\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\lib64\libssl-3-x64.dll" />
     <None Include="..\..\..\..\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\lib64\mysqlcppconn-10-vs14.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="crow_all.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

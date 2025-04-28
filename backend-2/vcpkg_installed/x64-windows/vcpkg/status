@@ -1,0 +1,50 @@
+Package: vcpkg-cmake-config
+Version: 2024-05-23
+Architecture: x64-windows
+Multi-Arch: same
+Abi: c775df2ee4244c0c088ff8fc766668668f2b6b062d09e07892fe77989dee6fd9
+Status: install ok installed
+
+Package: vcpkg-cmake
+Version: 2024-04-23
+Architecture: x64-windows
+Multi-Arch: same
+Abi: a41d29268e48b859e0182b2cdfea16c5683d953a2fe74a3aacba1b3f85176da9
+Status: install ok installed
+
+Package: asio
+Version: 1.32.0
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 89a068fde07c726b44046f2d29cddbbc43b2065f884371ee49538083973394c9
+Description: Asio is a cross-platform C++ library for network and low-level I/O programming that provides developers with a consistent asynchronous model using a modern C++ approach.
+Status: install ok installed
+
+Package: vcpkg-cmake-get-vars
+Version: 2024-09-22
+Depends: vcpkg-cmake
+Architecture: x64-windows
+Multi-Arch: same
+Abi: bdee5adf30189c674c117f3563c5afee6ccdfa871ff6f2e253aee055b597d862
+Status: install ok installed
+
+Package: openssl
+Version: 3.5.0
+Port-Version: 1
+Depends: vcpkg-cmake, vcpkg-cmake-config, vcpkg-cmake-get-vars
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 676f47886b1d78db957b72b5dcdf5e87a004537fcdc72f3119f9e547944b7b48
+Description: OpenSSL is an open source project that provides a robust, commercial-grade, and full-featured toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols. It is also a general-purpose cryptography library.
+Status: install ok installed
+
+Package: zlib
+Version: 1.3.1
+Depends: vcpkg-cmake
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 1d1167880ef90e1787945560298fb0b5fa5adeb604308fa844ce2d280efcfccf
+Description: A compression library
+Status: install ok installed
+
