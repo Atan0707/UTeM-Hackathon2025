@@ -23,6 +23,7 @@ interface LocationUI {
 
 const locations = [
   {
+<<<<<<< HEAD
     id: 'uitm',
     lng: 102.32110030660994,
     lat: 2.313769491462733,
@@ -65,34 +66,78 @@ const locations = [
     name: 'Jonker Street',
     description: 'Famous night market and shopping street',
     imageUrl: '/images/jonker-street.jpg',
+=======
+    id: 'mahkota parade',
+    lng: 102.2497642386984,
+    lat: 2.1894375051968415,
+    name: 'Mahkota Parade',
+    description: 'Shopping Center near Klebang Beach',
+    imageUrl: '/images/utem.jpg',
+>>>>>>> 5fa7dde1d887b451bfcf99ce732f4a0251764308
     category: 'Shopping'
   },
   {
-    id: 'melaka-sultanate-palace',
-    lng: 102.2506,
-    lat: 2.1939,
-    name: 'Melaka Sultanate Palace',
-    description: 'Replica of the 15th-century palace of Sultan Mansur Shah',
+    id: 'aeon bandaraya',
+    lng: 102.24635890095817,
+    lat: 2.214867083728227, 
+    name: 'Aeon Bandaraya',
+    description: 'Shopping Center in Bandaraya Melaka',
+    imageUrl: '/images/a-famosa.jpg',
+    category: 'Shopping'
+  },
+  {
+    id: 'aeon ayer keroh',
+    lng: 102.28238199634038,
+    lat: 2.2342510391130403,
+    name: 'Aeon Ayer Keroh',
+    description: 'Shopping Center in Ayer Keroh',
+    imageUrl: '/images/st-pauls.jpg',
+    category: 'Shopping'
+  },
+  {
+    id: 'melaka premium outlet',
+    lng: 102.20417570047923,
+    lat: 2.4436710205321597, 
+    name: 'Melaka Premium Outlet',
+    description: 'Shopping Center in Melaka',
+    imageUrl: '/images/christ-church.jpg',
+    category: 'Shopping'
+  },
+  {
+    id: 'melaka wonderland',
+    lng: 102.29444496458495,
+    lat: 2.2809107922639793,
+    name: 'Melaka Wonderland',
+    description: 'Water Theme Park in Ayer Keroh',
+    imageUrl: '/images/jonker-street.jpg',
+    category: 'Attraction'
+  },
+  {
+    id: 'zoo melaka',
+    lng: 102.29865525564288,
+    lat: 2.2765622753900105,
+    name: 'Zoo Melaka',
+    description: 'Zoo in Ayer Keroh',
     imageUrl: '/images/sultanate-palace.jpg',
-    category: 'Museum'
+    category: 'Attraction'
   },
   {
-    id: 'maritime-museum',
-    lng: 102.2486,
-    lat: 2.1947,
-    name: 'Maritime Museum',
-    description: 'Museum showcasing Melaka\'s maritime history',
+    id: 'taman buaya & rekreasi melaka',
+    lng: 102.29799942119904,
+    lat: 2.27718336006831,
+    name: 'Taman Buaya & Rekreasi Melaka (Melaka Crocodile & ​​Recreational Park)',
+    description: 'Crocodile Park in Ayer Keroh',
     imageUrl: '/images/maritime-museum.jpg',
-    category: 'Museum'
+    category: 'Attraction'
   },
   {
-    id: 'baba-nyonya-heritage-museum',
-    lng: 102.2469,
-    lat: 2.1962,
-    name: 'Baba & Nyonya Heritage Museum',
-    description: 'Museum of Peranakan culture and history',
+    id: 'a famosa water theme park',
+    lng: 102.21270346749017,
+    lat: 2.4270136340135995,
+    name: 'A Famosa Water Theme Park (Water World)',
+    description: 'Water Park in A Famosa',
     imageUrl: '/images/baba-nyonya.jpg',
-    category: 'Museum'
+    category: 'Attraction'
   },
   {
     id: 'menara-taming-sari',
