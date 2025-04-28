@@ -21,7 +21,7 @@ interface LocationUI {
   category?: string;
 }
 
-const predefinedLocaations: LocationUI[] = [
+const predefinedLocations = [
   {
     id: 'uitm',
     lng: 102.3217,
@@ -68,14 +68,61 @@ export default function Map({
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
   const userMarker = useRef<maplibregl.Marker | null>(null);
+  const locationMarkers = useRef<{ [key: string]: maplibregl.Marker }>({});
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [isMapInitialized, setIsMapInitialized] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const locationRequestedRef = useRef(false);
 
-  // Memoize this function to prevent recreation on every render
+  // Function to navigate to a location when card is clicked
+  const navigateToLocation = useCallback((location: LocationUI) => {
+    if (!map.current || !isMapInitialized) return;
+    
+    setSelectedLocation(location.id);
+    
+    map.current.flyTo({
+      center: [location.lng, location.lat],
+      zoom: 15,
+      essential: true
+    });
+    
+    // Add markers if they don't exist yet
+    if (!locationMarkers.current[location.id] && map.current) {
+      const popup = new maplibregl.Popup({ offset: 25 })
+        .setHTML(`
+          <div>
+            <h3 class="font-medium">${location.name}</h3>
+            <p class="text-sm">${location.description}</p>
+          </div>
+        `);
+      
+      const el = document.createElement('div');
+      el.className = 'location-marker';
+      el.style.backgroundColor = location.category === 'attraction' ? '#F7B731' : '#4B56D2';
+      el.style.width = '20px';
+      el.style.height = '20px';
+      el.style.borderRadius = '50%';
+      el.style.border = '2px solid white';
+      el.style.boxShadow = '0 0 0 2px rgba(0,0,0,0.1)';
+      
+      const marker = new maplibregl.Marker(el)
+        .setLngLat([location.lng, location.lat])
+        .setPopup(popup)
+        .addTo(map.current);
+      
+      locationMarkers.current[location.id] = marker;
+    }
+    
+    // Show popup for the location
+    if (locationMarkers.current[location.id]) {
+      locationMarkers.current[location.id].togglePopup();
+    }
+  }, [isMapInitialized]);
+
+  // Memoize getUserLocation function to prevent recreation on every render
   const getUserLocation = useCallback(() => {
-    // Prevent duplicate location requests
+    // Your existing getUserLocation implementation
     if (locationRequestedRef.current || !navigator.geolocation || !map.current || !isMapInitialized) return;
     
     console.log("Getting user location...");
@@ -131,7 +178,7 @@ export default function Map({
     }
   }, [userLocation, isMapInitialized, getUserLocation]);
 
-  // Initialize the map only once
+  // Your existing useEffect code for initializing map
   useEffect(() => {
     if (map.current || !mapContainer.current) return;
     
@@ -215,7 +262,7 @@ export default function Map({
       {!userLocation && !locationError && isMapInitialized && (
         <button
           onClick={getUserLocation}
-          className="absolute bottom-20 right-6 bg-green-600 hover:bg-green-700 text-white font-medium rounded-full p-3 shadow-lg transition-colors z-10 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="absolute bottom-32 right-6 bg-green-600 hover:bg-green-700 text-white font-medium rounded-full p-3 shadow-lg transition-colors z-10 focus:outline-none focus:ring-2 focus:ring-green-500"
           aria-label="Get my location"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -228,7 +275,7 @@ export default function Map({
       {userLocation && (
         <button
           onClick={showUserLocation}
-          className="absolute bottom-6 right-6 bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-full p-3 shadow-lg transition-colors z-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="absolute bottom-32 right-6 bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-full p-3 shadow-lg transition-colors z-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
           aria-label="Show my location"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -237,6 +284,33 @@ export default function Map({
           </svg>
         </button>
       )}
+      
+      {/* Location cards at the bottom */}
+      <div className="absolute bottom-4 left-0 right-0 z-10 px-4">
+        <div className="flex overflow-x-auto gap-3 pb-1">
+          {predefinedLocations.map((location) => (
+            <div
+              key={location.id}
+              onClick={() => navigateToLocation(location)}
+              className={`
+                flex-shrink-0 bg-white rounded-lg shadow-md p-3 cursor-pointer
+                w-56 transition-all duration-200
+                ${selectedLocation === location.id ? 'shadow-xl transform -translate-y-1' : 'hover:shadow-lg'}
+              `}
+            >
+              <h3 className="font-medium text-base truncate">{location.name}</h3>
+              <p className="text-gray-600 text-sm line-clamp-2 mt-1">{location.description}</p>
+              <div className={`
+                mt-2 inline-block px-2 py-1 text-xs rounded-full
+                ${location.category === 'attraction' ? 'bg-yellow-100 text-yellow-700' : 
+                 location.category === 'University' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}
+              `}>
+                {location.category}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
