@@ -51,10 +51,6 @@ export default function Map({
 
     // Add markers if they don't exist yet
     if (!locationMarkers.current[location.id] && map.current) {
-      console.log('Creating marker for:', location.name);
-      console.log('Category:', location.category);
-      console.log('Emoji:', getCategoryEmoji(location.category));
-
       const popup = new maplibregl.Popup({
         offset: 25,
         closeButton: false
@@ -63,6 +59,7 @@ export default function Map({
           <div>
             <h3 class="font-medium">${location.name}</h3>
             <p class="text-sm">${location.description}</p>
+            <p class="text-xs text-gray-500 mt-1">Lat: ${location.lat.toFixed(6)}, Lng: ${location.lng.toFixed(6)}</p>
           </div>
         `);
 
@@ -70,32 +67,21 @@ export default function Map({
       el.className = 'location-marker';
       el.style.width = '30px';
       el.style.height = '30px';
-      el.style.display = 'flex';
-      el.style.alignItems = 'center';
-      el.style.justifyContent = 'center';
-      el.style.fontSize = '24px'; // Increased font size
-      el.style.backgroundColor = 'white';
-      el.style.borderRadius = '50%';
-      el.style.border = '2px solid white';
-      el.style.boxShadow = '0 0 0 2px rgba(0,0,0,0.1)';
-      
-      // Create a span element for the emoji
-      const emojiSpan = document.createElement('span');
-      const emoji = getCategoryEmoji(location.category);
-      console.log('Setting emoji span content:', emoji);
-      emojiSpan.textContent = emoji;
-      el.appendChild(emojiSpan);
+      el.style.backgroundImage = 'url(/images/marker.png)';
+      el.style.backgroundSize = 'contain';
+      el.style.backgroundRepeat = 'no-repeat';
+      el.style.cursor = 'pointer';
 
+      // Set the marker position with exact coordinates
       const marker = new maplibregl.Marker(el)
         .setLngLat([location.lng, location.lat])
         .setPopup(popup)
         .addTo(map.current);
 
       locationMarkers.current[location.id] = marker;
-      console.log('Marker created and added to map');
     }
 
-    // Fly to location with smooth animation
+    // Fly to location with exact coordinates
     map.current.flyTo({
       center: [location.lng, location.lat],
       zoom: 16,
