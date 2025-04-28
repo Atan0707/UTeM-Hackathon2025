@@ -24,7 +24,7 @@ export const locations: LocationUI[] = [
         lat: 2.214867083728227,
         name: 'Aeon Bandaraya',
         description: 'Shopping Center in Bandaraya Melaka',
-        imageUrl: '/images/a-famosa.jpg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Northeastern_side_of_Aeon_Bandaraya_Melaka.JPG/1024px-Northeastern_side_of_Aeon_Bandaraya_Melaka.JPG',
         category: 'Shopping'
     },
     {
@@ -33,7 +33,7 @@ export const locations: LocationUI[] = [
         lat: 2.2342510391130403,
         name: 'Aeon Ayer Keroh',
         description: 'Shopping Center in Ayer Keroh',
-        imageUrl: '/images/st-pauls.jpg',
+        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjw7cgRC3IkdCrJKHqNMzImhk_0cAc12bHgw&s',
         category: 'Shopping'
     },
     {
@@ -42,7 +42,7 @@ export const locations: LocationUI[] = [
         lat: 2.4436710205321597,
         name: 'Melaka Premium Outlet',
         description: 'Shopping Center in Melaka',
-        imageUrl: '/images/christ-church.jpg',
+        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMkrKXmIfP0EruQdW-VSkXmKVAVG9aqcEJmg&s',
         category: 'Shopping'
     },
     {
@@ -213,7 +213,7 @@ export const locations: LocationUI[] = [
         lat: 2.313839880353972,
         name: 'Universiti Teknologi Malaysia (UTeM)',
         description: 'Universiti Teknologi Malaysia is a university in Melaka',
-        imageUrl: '/images/utem.jpg',
+        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ84xIQDV6HplnQIi_ZaJ0bexbPdRBAxtU5CQ&s',
         category: 'University'
     },
     {
@@ -222,7 +222,7 @@ export const locations: LocationUI[] = [
         lat: 2.221589373920741,
         name: 'Universiti Teknologi MARA (UiTM) Cawangan Jasin',
         description: 'Universiti Teknologi MARA Cawangan Jasin is a university in Melaka',
-        imageUrl: '/images/uitm-jasin.jpg',
+        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0s0JmJAYgQjTiC-o5J9hhkGB2OS7julpzbw&s',
         category: 'University'
     },
     {
@@ -231,7 +231,7 @@ export const locations: LocationUI[] = [
         lat: 2.3617861789269705,
         name: 'Universiti Teknologi MARA (UiTM) Cawangan Alor Gajah',
         description: 'Universiti Teknologi MARA Cawangan Alor Gajah is a university in Melaka',
-        imageUrl: '/images/uitm-alor-gajah.jpg',
+        imageUrl: 'https://amiruruitmalorgajah.wordpress.com/wp-content/uploads/2018/07/uitm-melaka.jpg',
         category: 'University'
     },
     {
@@ -240,7 +240,7 @@ export const locations: LocationUI[] = [
         lat: 2.2052611598851395,
         name: 'Universiti Teknologi MARA (UiTM) Cawangan Bandaraya Melaka',
         description: 'Universiti Teknologi MARA Cawangan Bandaraya Melaka is a university in Melaka',
-        imageUrl: '/images/uitm-bandaraya-melaka.jpg',
+        imageUrl: 'https://i.ytimg.com/vi/RzF4VVzwnV8/sddefault.jpg',
         category: 'University'
     },
     {
@@ -249,7 +249,7 @@ export const locations: LocationUI[] = [
         lat: 2.194366299993775,
         name: 'Dutch Square (Red Square) Melaka',
         description: 'Dutch Square Melaka is a heritage site in Melaka',
-        imageUrl: '/images/dutch-square-melaka.jpg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Malacca_stadhuys1.jpg/960px-Malacca_stadhuys1.jpg',
         category: 'Heritage'
     },
     {
@@ -258,7 +258,7 @@ export const locations: LocationUI[] = [
         lat: 2.1918068407366365,
         name: 'A Famosa',
         description: 'A Famosa is a heritage site in Melaka',
-        imageUrl: '/images/a-famosa.jpg',
+        imageUrl: 'https://onalulu.com/wp-content/uploads/2023/10/A-Famosa.jpg',
         category: 'Heritage'
     },
     {
@@ -267,7 +267,7 @@ export const locations: LocationUI[] = [
         lat: 2.1953489209612407,
         name: 'Baba & Nyonya Heritage Museum',
         description: 'Baba & Nyonya Heritage Museum is a heritage site in Melaka',
-        imageUrl: '/images/baba-nyonya.jpg',
+        imageUrl: 'https://www.babanyonyamuseum.com/wp-content/uploads/2024/07/home-facade-cropped.webp',
         category: 'Heritage'
     },
 ]
