@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, FormEvent, MouseEvent } from 'react';
+import { useState, FormEvent, MouseEvent, useEffect } from 'react';
 import Map from '@/components/map';
 import { toast, Toaster } from 'react-hot-toast';
+import Link from 'next/link';
 
 interface FormData {
   username?: string;
@@ -29,7 +30,7 @@ export default function Home() {
   const [user, setUser] = useState<User | null>(null);
 
   // Check for existing user session on component mount
-  useState(() => {
+  useEffect(() => {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       try {
@@ -38,7 +39,7 @@ export default function Home() {
         localStorage.removeItem('user');
       }
     }
-  });
+  }, []);
 
   // Handler to switch to signup modal
   const openSignup = (e?: MouseEvent<HTMLSpanElement>) => {
@@ -69,7 +70,7 @@ export default function Home() {
     setIsLoading(true);
     
     try {
-      const response = await fetch('http://localhost:18080/api/login', {
+      const response = await fetch('http://localhost:3001/api/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -106,7 +107,7 @@ export default function Home() {
     setIsLoading(true);
     
     try {
-      const response = await fetch('http://localhost:18080/api/register', {
+      const response = await fetch('http://localhost:3001/api/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -159,6 +160,12 @@ export default function Home() {
             {user ? (
               <div className="flex items-center gap-3">
                 <span className="text-white font-semibold">Hi, {user.username}</span>
+                <Link 
+                  href="/places" 
+                  className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md transition-colors"
+                >
+                  Manage Places
+                </Link>
                 <button
                   className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition-colors"
                   onClick={handleLogout}
