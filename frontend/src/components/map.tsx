@@ -11,7 +11,7 @@ interface MapProps {
 }
 
 export default function Map({ 
-  style = 'https://api.maptiler.com/maps/streets/style.json?key=EJsqIOpsUVhXXofk2osf',
+  style = `https://api.maptiler.com/maps/streets/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_API_KEY}`,
   center = [102.3217, 2.3153],
   zoom = 12 
 }: MapProps) {
