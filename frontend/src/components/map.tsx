@@ -38,29 +38,64 @@ export default function Map({
 
   const navigateToLocation = useCallback((location: LocationUI) => {
     if (!map.current || !isMapInitialized) return;
-  
-    // Close any previously opened popups
+    
+    const isNewSelection = selectedLocation !== location.id;
+    setSelectedLocation(location.id);
+    setDialogLocation(location);
+
+    // Close any open popups first to avoid visual glitches
     if (selectedLocation && locationMarkers.current[selectedLocation]) {
       const popup = locationMarkers.current[selectedLocation].getPopup();
       if (popup && popup.isOpen()) {
         popup.remove();
       }
     }
-  
-    // Update UI state
-    setSelectedLocation(location.id);
-    setDialogLocation(location);
-  
-    // Fly to location with smooth animation
-    if (map.current) {
-      map.current.flyTo({
-        center: [location.lng, location.lat],
-        zoom: 16,
-        essential: true,
-        duration: 1500, // Slightly faster animation
-        padding: { top: 50, bottom: 150, left: 50, right: 50 },
-        curve: 1.42
-      });
+
+    // Add markers if they don't exist yet
+    if (!locationMarkers.current[location.id] && map.current) {
+      const popup = new maplibregl.Popup({
+        offset: 25,
+        closeButton: false
+      })
+        .setHTML(`
+          <div>
+            <h3 class="font-medium">${location.name}</h3>
+            <p class="text-sm">${location.description}</p>
+            <p class="text-xs text-gray-500 mt-1">Lat: ${location.lat.toFixed(6)}, Lng: ${location.lng.toFixed(6)}</p>
+          </div>
+        `);
+
+      const el = document.createElement('div');
+      el.className = 'location-marker';
+      el.style.width = '30px';
+      el.style.height = '30px';
+      el.style.backgroundImage = 'url(/images/marker.png)';
+      el.style.backgroundSize = 'contain';
+      el.style.backgroundRepeat = 'no-repeat';
+      el.style.cursor = 'pointer';
+
+      // Set the marker position with exact coordinates
+      const marker = new maplibregl.Marker(el)
+        .setLngLat([location.lng, location.lat])
+        .setPopup(popup)
+        .addTo(map.current);
+
+      locationMarkers.current[location.id] = marker;
+    }
+
+    // Fly to location with exact coordinates
+    map.current.flyTo({
+      center: [location.lng, location.lat],
+      zoom: 16,
+      essential: true,
+      duration: 2000,
+      padding: { top: 50, bottom: 150, left: 50, right: 50 },
+      curve: 1.42
+    });
+
+    // Show the popup when centering
+    if (locationMarkers.current[location.id]) {
+      locationMarkers.current[location.id].togglePopup();
     }
   
     // No delayed popup toggle - the dialog will show immediately instead

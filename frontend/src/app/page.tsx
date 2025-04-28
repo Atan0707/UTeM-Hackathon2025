@@ -25,6 +25,22 @@ export default function Home() {
               </li>
             </ul>
           </div>
+
+          {/* Login Section */}
+          <div className="flex items-center gap-4">
+            <button
+              className="text-gray-900 hover:text-blue-700 transition-colors font-medium"
+              onClick={() => {/* Add login handler here */}}
+            >
+              Login
+            </button>
+            <button
+              className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md transition-colors"
+              onClick={() => {/* Add signup handler here */}}
+            >
+              Sign Up
+            </button>
+          </div>
         </div>
       </header>
 
