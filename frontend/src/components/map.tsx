@@ -10,6 +10,47 @@ interface MapProps {
   zoom?: number;
 }
 
+// Define location UI
+interface LocationUI {
+  id: string;
+  lng: number;
+  lat: number;
+  name: string;
+  description: string;
+  imageUrl: string;
+  category?: string;
+}
+
+const predefinedLocaations: LocationUI[] = [
+  {
+    id: 'uitm',
+    lng: 102.3217,
+    lat: 2.3153,
+    name: 'UTeM',
+    description: 'Universiti Teknikal Malaysia Melaka',
+    imageUrl: '/images/utem.jpg',
+    category: 'University'
+  },
+  {
+    id: 'utem',
+    lng: 102.3217,
+    lat: 2.3153,
+    name: 'UTeM',
+    description: 'Universiti Teknikal Malaysia Melaka',
+    imageUrl: '/images/utem.jpg',
+    category: 'University'
+  },
+  {
+    id: 'jonker-street',
+    lng: 102.2461,
+    lat: 2.1946,
+    name: 'Jonker Street',
+    description: 'Famous street with shops and weekend night market',
+    imageUrl: '/images/jonker-street.jpg',
+    category: 'attraction'
+  },
+];
+
 // Move outside component to prevent re-creation on each render
 const getMapStyle = () => {
   if (process.env.NEXT_PUBLIC_MAPTILER_API_KEY) {
