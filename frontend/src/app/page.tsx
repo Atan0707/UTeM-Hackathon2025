@@ -25,11 +25,7 @@ export default function Home() {
       <header className="bg-white shadow-sm z-10 border-b-2 border-black">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <h1 className="logo-stacked">
-              <span className="logo-line">VISIT</span><br />
-              <span className="logo-line">MELAKA</span><br /> 
-              <span className="logo-line">2025</span>
-            </h1>
+            <h1 className="font-bold text-2xl text-blue-900">VISIT MELAKA 2025</h1>
           </div>
           
           {/* Login Section */}
