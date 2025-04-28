@@ -156,7 +156,7 @@ export default function Map({
       }
       
       // Show the popup when centering
-      userMarker.current.togglePopup();
+      //userMarker.current.togglePopup();
     } else if (!userLocation) {
       console.log('No user location available, requesting location');
       getUserLocation();
@@ -292,7 +292,7 @@ export default function Map({
                 ${selectedLocation === location.id ? 'shadow-xl transform -translate-y-1' : 'hover:shadow-lg'}
               `}
             >
-              <h3 className="font-medium text-base truncate">{location.name}</h3>
+              <h3 className="font-medium text-base truncate text-blue-900">{location.name}</h3>
               <p className="text-gray-600 text-sm line-clamp-2 mt-1">{location.description}</p>
               <div className={`
                   mt-2 inline-block px-2 py-1 text-xs rounded-full
