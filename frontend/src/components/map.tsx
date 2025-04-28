@@ -139,7 +139,11 @@ export default function Map({
 
   // Function to center map on user location
   const showUserLocation = useCallback(() => {
+    console.log('showUserLocation called', { userLocation, isMapInitialized });
+    
     if (userLocation && map.current && isMapInitialized) {
+      console.log('Creating/updating user marker at:', userLocation);
+      
       map.current.flyTo({
         center: userLocation,
         zoom: 15,
@@ -150,11 +154,35 @@ export default function Map({
       if (userMarker.current) {
         userMarker.current.togglePopup();
       }
+      
+      // Show the popup when centering
+      userMarker.current.togglePopup();
     } else if (!userLocation) {
-      // If we don't have the location yet, try to get it
+      console.log('No user location available, requesting location');
       getUserLocation();
     }
   }, [userLocation, isMapInitialized, getUserLocation]);
+
+  // Get user location after map is initialized
+  useEffect(() => {
+    if (isMapInitialized) {
+      console.log('Map initialized, requesting user location');
+      // Add delay to ensure map is ready
+      const timer = setTimeout(() => {
+        getUserLocation();
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isMapInitialized, getUserLocation]);
+
+  // Update user marker when location changes
+  useEffect(() => {
+    if (userLocation && map.current && isMapInitialized && userMarker.current) {
+      console.log('Updating user marker position due to location change:', userLocation);
+      userMarker.current.setLngLat(userLocation);
+    }
+  }, [userLocation, isMapInitialized]);
 
   // Your existing useEffect code for initializing map
   useEffect(() => {
@@ -200,18 +228,6 @@ export default function Map({
       }
     };
   }, [center, zoom, style]);
-
-  // Get user location after map is initialized
-  useEffect(() => {
-    if (isMapInitialized) {
-      // Add delay to ensure map is ready
-      const timer = setTimeout(() => {
-        getUserLocation();
-      }, 500);
-
-      return () => clearTimeout(timer);
-    }
-  }, [isMapInitialized, getUserLocation]);
 
   return (
     <div className="relative w-full h-full" style={{ minHeight: "400px" }}>
