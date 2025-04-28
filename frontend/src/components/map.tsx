@@ -48,36 +48,6 @@ export default function Map({
       locationMarkers.current[selectedLocation].getPopup();
     }
 
-    // Add markers if they don't exist yet
-    if (!locationMarkers.current[location.id] && map.current) {
-      const popup = new maplibregl.Popup({
-        offset: 25,
-        closeButton: false // Cleaner look
-      })
-        .setHTML(`
-          <div>
-            <h3 class="font-medium">${location.name}</h3>
-            <p class="text-sm">${location.description}</p>
-          </div>
-        `);
-
-      const el = document.createElement('div');
-      el.className = 'location-marker';
-      el.style.backgroundColor = location.category === 'attraction' ? '#F7B731' : '#4B56D2';
-      el.style.width = '20px';
-      el.style.height = '20px';
-      el.style.borderRadius = '50%';
-      el.style.border = '2px solid white';
-      el.style.boxShadow = '0 0 0 2px rgba(0,0,0,0.1)';
-
-      const marker = new maplibregl.Marker(el)
-        .setLngLat([location.lng, location.lat])
-        .setPopup(popup)
-        .addTo(map.current);
-
-      locationMarkers.current[location.id] = marker;
-    }
-
     // Fly to location with smooth animation
     map.current.flyTo({
       center: [location.lng, location.lat],
