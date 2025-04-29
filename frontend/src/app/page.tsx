@@ -87,18 +87,26 @@ export default function Home() {
   const [selectedPlaceReviews, setSelectedPlaceReviews] = useState<Review[]>([]);
   const [userReview, setUserReview] = useState<Review | null>(null);
   const [isLoadingReviews, setIsLoadingReviews] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
-  // Check for existing user session on component mount
+  // Set isClient to true when component mounts on client
   useEffect(() => {
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch {
-        localStorage.removeItem('user');
+    setIsClient(true);
+  }, []);
+
+  // Check for existing user session on component mount - only run on client side
+  useEffect(() => {
+    if (isClient) {
+      const savedUser = localStorage.getItem('user');
+      if (savedUser) {
+        try {
+          setUser(JSON.parse(savedUser));
+        } catch {
+          localStorage.removeItem('user');
+        }
       }
     }
-  }, []);
+  }, [isClient]);
 
   // Fetch places when modal opens
   useEffect(() => {
@@ -367,8 +375,10 @@ export default function Home() {
       const data = await response.json();
       
       if (response.ok) {
-        // Store user data in localStorage
-        localStorage.setItem('user', JSON.stringify(data));
+        // Store user data in localStorage only on client
+        if (isClient) {
+          localStorage.setItem('user', JSON.stringify(data));
+        }
         setUser(data);
         setShowLogin(false);
         toast.success('Logged in successfully!');
@@ -428,9 +438,11 @@ export default function Home() {
 
   // Handle logout
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    setUser(null);
-    toast.success('Logged out successfully!');
+    if (isClient) {
+      localStorage.removeItem('user');
+      setUser(null);
+      toast.success('Logged out successfully!');
+    }
   };
 
   // Function to fetch place reviews
@@ -522,37 +534,39 @@ export default function Home() {
             <h1 className="text-2xl font-bold text-white text-shadow-sm">Visit Melaka 2025</h1>
           </div>
           
-          {/* Login/User Section */}
-          <div className="flex items-center gap-4">
-            {user ? (
-              <div className="flex items-center gap-3">
-                <span className="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">
-                  {user.username}
-                </span>
-                {user.email === 'atan@gmail.com' && (
-                  <button 
-                    className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md transition-colors"
-                    onClick={() => setShowPlacesModal(true)}
+          {/* Login/User Section - Only render when on client side */}
+          {isClient && (
+            <div className="flex items-center gap-4">
+              {user ? (
+                <div className="flex items-center gap-3">
+                  <span className="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">
+                    {user.username}
+                  </span>
+                  {user.email === 'atan@gmail.com' && (
+                    <button 
+                      className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md transition-colors"
+                      onClick={() => setShowPlacesModal(true)}
+                    >
+                      Manage Places
+                    </button>
+                  )}
+                  <button
+                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition-colors"
+                    onClick={handleLogout}
                   >
-                    Manage Places
+                    Logout
                   </button>
-                )}
+                </div>
+              ) : (
                 <button
-                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition-colors"
-                  onClick={handleLogout}
+                  className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md transition-colors"
+                  onClick={() => setShowLogin(true)}
                 >
-                  Logout
+                  Login
                 </button>
-              </div>
-            ) : (
-              <button
-                className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md transition-colors"
-                onClick={() => setShowLogin(true)}
-              >
-                Login
-              </button>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
       </header>
 
@@ -1187,9 +1201,9 @@ export default function Home() {
         </div>
       )}
 
-      {/* Map Container - fills all remaining space */}
+      {/* Map Container - render conditionally to prevent SSR issues */}
       <div className="flex-1 w-full">
-        <Map />
+        {isClient && <Map />}
       </div>
     </main>
   );
