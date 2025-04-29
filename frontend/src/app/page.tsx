@@ -5,7 +5,6 @@ import Map from '@/components/map';
 import { toast, Toaster } from 'react-hot-toast';
 import ReviewCard from '@/components/ReviewCard';
 import ReviewForm from '@/components/ReviewForm';
-import { useRouter } from 'next/navigation';
 
 interface FormData {
   username?: string;
@@ -89,8 +88,6 @@ export default function Home() {
   const [userReview, setUserReview] = useState<Review | null>(null);
   const [isLoadingReviews, setIsLoadingReviews] = useState(false);
 
-  const router = useRouter();
-
   // Check for existing user session on component mount
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
@@ -105,34 +102,46 @@ export default function Home() {
 
   // Fetch places when modal opens
   useEffect(() => {
+    const controller = new AbortController();
+    
     if (showPlacesModal) {
-      fetchPlaces();
-    }
-  }, [showPlacesModal]);
-
-  // Fetch places from API
-  const fetchPlaces = async () => {
-    setIsLoadingPlaces(true);
-    try {
-      const response = await fetch('http://localhost:3001/api/places');
-      const data = await response.json();
+      const fetchData = async () => {
+        try {
+          setIsLoadingPlaces(true);
+          const response = await fetch('http://localhost:3001/api/places', {
+            signal: controller.signal
+          });
+          const data = await response.json();
+          
+          if (response.ok) {
+            setPlaces(data.places);
+          } else {
+            toast.error('Failed to fetch places');
+          }
+        } catch (error) {
+          if (error instanceof Error && error.name !== 'AbortError') {
+            toast.error('Network error. Please try again.');
+          }
+        } finally {
+          setIsLoadingPlaces(false);
+        }
+      };
       
-      if (response.ok) {
-        setPlaces(data.places);
-      } else {
-        toast.error('Failed to fetch places');
-      }
-    } catch {
-      toast.error('Network error. Please try again.');
-    } finally {
-      setIsLoadingPlaces(false);
+      fetchData();
     }
-  };
+    
+    return () => {
+      controller.abort();
+    };
+  }, [showPlacesModal]);
 
   // Fetch place details including reviews
   const fetchPlaceDetails = async (placeId: number) => {
+    const controller = new AbortController();
     try {
-      const response = await fetch(`http://localhost:3001/api/places/${placeId}`);
+      const response = await fetch(`http://localhost:3001/api/places/${placeId}`, {
+        signal: controller.signal
+      });
       const data = await response.json();
       
       if (response.ok) {
@@ -140,9 +149,13 @@ export default function Home() {
       } else {
         toast.error('Failed to fetch place details');
       }
-    } catch {
-      toast.error('Network error. Please try again.');
+    } catch (error) {
+      if (error instanceof Error && error.name !== 'AbortError') {
+        toast.error('Network error. Please try again.');
+      }
     }
+    
+    return controller;
   };
 
   // Handle place form input changes
@@ -205,12 +218,14 @@ export default function Home() {
     }
 
     try {
+      const controller = new AbortController();
       const response = await fetch('http://localhost:3001/api/places', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(placeFormData)
+        body: JSON.stringify(placeFormData),
+        signal: controller.signal
       });
       
       const data = await response.json();
@@ -218,12 +233,19 @@ export default function Home() {
       if (response.ok) {
         toast.success('Place added successfully!');
         setShowAddModal(false);
-        fetchPlaces();
+        // Refresh places list
+        if (showPlacesModal) {
+          // Trigger the useEffect that loads places
+          setShowPlacesModal(false);
+          setTimeout(() => setShowPlacesModal(true), 10);
+        }
       } else {
         toast.error(data.message || 'Failed to add place');
       }
-    } catch {
-      toast.error('Network error. Please try again.');
+    } catch (error) {
+      if (error instanceof Error && error.name !== 'AbortError') {
+        toast.error('Network error. Please try again.');
+      }
     }
   };
 
@@ -237,12 +259,14 @@ export default function Home() {
     }
 
     try {
+      const controller = new AbortController();
       const response = await fetch(`http://localhost:3001/api/places/${selectedPlace.place_id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(placeFormData)
+        body: JSON.stringify(placeFormData),
+        signal: controller.signal
       });
       
       const data = await response.json();
@@ -250,12 +274,19 @@ export default function Home() {
       if (response.ok) {
         toast.success('Place updated successfully!');
         setShowEditModal(false);
-        fetchPlaces();
+        // Refresh places list
+        if (showPlacesModal) {
+          // Trigger the useEffect that loads places
+          setShowPlacesModal(false);
+          setTimeout(() => setShowPlacesModal(true), 10);
+        }
       } else {
         toast.error(data.message || 'Failed to update place');
       }
-    } catch {
-      toast.error('Network error. Please try again.');
+    } catch (error) {
+      if (error instanceof Error && error.name !== 'AbortError') {
+        toast.error('Network error. Please try again.');
+      }
     }
   };
 
@@ -264,8 +295,10 @@ export default function Home() {
     if (!selectedPlace) return;
 
     try {
+      const controller = new AbortController();
       const response = await fetch(`http://localhost:3001/api/places/${selectedPlace.place_id}`, {
         method: 'DELETE',
+        signal: controller.signal
       });
       
       const data = await response.json();
@@ -273,12 +306,19 @@ export default function Home() {
       if (response.ok) {
         toast.success('Place deleted successfully!');
         setShowDeleteConfirm(false);
-        fetchPlaces();
+        // Refresh places list
+        if (showPlacesModal) {
+          // Trigger the useEffect that loads places
+          setShowPlacesModal(false);
+          setTimeout(() => setShowPlacesModal(true), 10);
+        }
       } else {
         toast.error(data.message || 'Failed to delete place');
       }
-    } catch {
-      toast.error('Network error. Please try again.');
+    } catch (error) {
+      if (error instanceof Error && error.name !== 'AbortError') {
+        toast.error('Network error. Please try again.');
+      }
     }
   };
 
@@ -311,6 +351,7 @@ export default function Home() {
     setIsLoading(true);
     
     try {
+      const controller = new AbortController();
       const response = await fetch('http://localhost:3001/api/users/login', {
         method: 'POST',
         headers: {
@@ -319,7 +360,8 @@ export default function Home() {
         body: JSON.stringify({
           email: formData.email,
           password: formData.password
-        })
+        }),
+        signal: controller.signal
       });
       
       const data = await response.json();
@@ -335,8 +377,10 @@ export default function Home() {
       } else {
         toast.error(data.message || 'Login failed');
       }
-    } catch {
-      toast.error('Network error. Please try again.');
+    } catch (error) {
+      if (error instanceof Error && error.name !== 'AbortError') {
+        toast.error('Network error. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -348,6 +392,7 @@ export default function Home() {
     setIsLoading(true);
     
     try {
+      const controller = new AbortController();
       const response = await fetch('http://localhost:3001/api/users/register', {
         method: 'POST',
         headers: {
@@ -357,7 +402,8 @@ export default function Home() {
           username: formData.username,
           email: formData.email,
           password: formData.password
-        })
+        }),
+        signal: controller.signal
       });
       
       const data = await response.json();
@@ -371,8 +417,10 @@ export default function Home() {
       } else {
         toast.error(data.message || 'Registration failed');
       }
-    } catch {
-      toast.error('Network error. Please try again.');
+    } catch (error) {
+      if (error instanceof Error && error.name !== 'AbortError') {
+        toast.error('Network error. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -388,8 +436,11 @@ export default function Home() {
   // Function to fetch place reviews
   const fetchPlaceReviews = async (placeId: number) => {
     setIsLoadingReviews(true);
+    const controller = new AbortController();
     try {
-      const response = await fetch(`http://localhost:3001/api/places/${placeId}`);
+      const response = await fetch(`http://localhost:3001/api/places/${placeId}`, {
+        signal: controller.signal
+      });
       const data = await response.json();
       
       if (response.ok) {
@@ -404,21 +455,60 @@ export default function Home() {
         toast.error('Failed to fetch reviews');
       }
     } catch (error) {
-      console.error('Error fetching reviews:', error);
-      toast.error('Network error. Please try again.');
+      if (error instanceof Error && error.name !== 'AbortError') {
+        console.error('Error fetching reviews:', error);
+        toast.error('Network error. Please try again.');
+      }
     } finally {
       setIsLoadingReviews(false);
     }
+    
+    return controller;
   };
 
   // When a place is selected, fetch its reviews
   useEffect(() => {
+    const controller = new AbortController();
+    
     if (selectedPlace && showDetailsModal) {
-      fetchPlaceReviews(selectedPlace.place_id);
+      const fetchData = async () => {
+        try {
+          setIsLoadingReviews(true);
+          const response = await fetch(`http://localhost:3001/api/places/${selectedPlace.place_id}`, {
+            signal: controller.signal
+          });
+          const data = await response.json();
+          
+          if (response.ok) {
+            setSelectedPlaceReviews(data.reviews || []);
+            
+            // If user is logged in, find their review
+            if (user) {
+              const review = data.reviews?.find((r: Review) => r.user_id === user.user_id) || null;
+              setUserReview(review);
+            }
+          } else {
+            toast.error('Failed to fetch reviews');
+          }
+        } catch (error) {
+          if (error instanceof Error && error.name !== 'AbortError') {
+            console.error('Error fetching reviews:', error);
+            toast.error('Network error. Please try again.');
+          }
+        } finally {
+          setIsLoadingReviews(false);
+        }
+      };
+      
+      fetchData();
     } else {
       setSelectedPlaceReviews([]);
       setUserReview(null);
     }
+    
+    return () => {
+      controller.abort();
+    };
   }, [selectedPlace, showDetailsModal, user]);
 
   return (
@@ -436,7 +526,9 @@ export default function Home() {
           <div className="flex items-center gap-4">
             {user ? (
               <div className="flex items-center gap-3">
-                <span className="text-white font-semibold">Hi, {user.username}</span>
+                <span className="bg-blue-600 text-white px-4 py-2 rounded-md font-bold">
+                  {user.username}
+                </span>
                 {user.email === 'atan@gmail.com' && (
                   <button 
                     className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md transition-colors"

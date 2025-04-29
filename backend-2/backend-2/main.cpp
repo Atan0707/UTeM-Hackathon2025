@@ -13,6 +13,7 @@
 #include <cppconn/resultset.h>
 #include <cppconn/statement.h>
 #include <cppconn/prepared_statement.h>
+#include "express-launcher.cpp" // Include the Express launcher
 
 // Use specific namespaces to avoid ambiguity
 using namespace std;
@@ -117,14 +118,23 @@ crow::response executeQuery(T queryFunc) {
 
 int main() {
     try {
-        // Test database connection at startup
+        // Start the Express server
+        ExpressLauncher expressServer;
+        if (!expressServer.start()) {
+            std::cerr << "Failed to start Express server. Continuing with C++ server." << std::endl;
+        }
+        
+        // Test database connection but don't exit if it fails
         std::unique_ptr<sql::Connection> testCon(getConnection());
-        if (!testCon) {
+        bool dbConnected = (testCon != nullptr);
+        
+        if (!dbConnected) {
             std::cerr << "Failed to establish initial database connection. Please check MySQL server is running." << std::endl;
             std::cerr << "Make sure MySQL server is running on localhost:3306 with username 'root' and password 'root'" << std::endl;
-            return 1;
+            std::cerr << "Continuing without database functionality." << std::endl;
+        } else {
+            std::cout << "Successfully connected to database." << std::endl;
         }
-        std::cout << "Successfully connected to database." << std::endl;
         
         // Change from SimpleApp to App with CORSHandler
         crow::App<crow::CORSHandler> app;

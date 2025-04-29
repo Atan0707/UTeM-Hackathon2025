@@ -92,6 +92,7 @@ export default function Map({
   const [showLoginDialog, setShowLoginDialog] = useState(false);
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [loginError, setLoginError] = useState<string | null>(null);
+  const [distanceToPlace, setDistanceToPlace] = useState<number | null>(null);
   
   // Load places from API
   useEffect(() => {
@@ -268,23 +269,23 @@ export default function Map({
   }, [isMapInitialized]);
   
   // Helper function to calculate bearing between two points (direction)
-  const getBearing = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
-    const toRadians = (degrees: number) => degrees * Math.PI / 180;
-    const toDegrees = (radians: number) => radians * 180 / Math.PI;
+  // const getBearing = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
+  //   const toRadians = (degrees: number) => degrees * Math.PI / 180;
+  //   const toDegrees = (radians: number) => radians * 180 / Math.PI;
     
-    const startLat = toRadians(lat1);
-    const startLng = toRadians(lng1);
-    const destLat = toRadians(lat2);
-    const destLng = toRadians(lng2);
+  //   const startLat = toRadians(lat1);
+  //   const startLng = toRadians(lng1);
+  //   const destLat = toRadians(lat2);
+  //   const destLng = toRadians(lng2);
     
-    const y = Math.sin(destLng - startLng) * Math.cos(destLat);
-    const x = Math.cos(startLat) * Math.sin(destLat) -
-              Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLng - startLng);
-    let bearing = toDegrees(Math.atan2(y, x));
-    bearing = (bearing + 360) % 360; // Normalize to 0-360
+  //   const y = Math.sin(destLng - startLng) * Math.cos(destLat);
+  //   const x = Math.cos(startLat) * Math.sin(destLat) -
+  //             Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLng - startLng);
+  //   let bearing = toDegrees(Math.atan2(y, x));
+  //   bearing = (bearing + 360) % 360; // Normalize to 0-360
     
-    return bearing;
-  };
+  //   return bearing;
+  // };
   
   // Helper function to calculate distance between two coordinates
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
@@ -300,6 +301,7 @@ export default function Map({
     return d;
   };
   
+  // Helper function to convert degrees to radians
   const deg2rad = (deg: number): number => {
     return deg * (Math.PI/180);
   };
@@ -897,6 +899,74 @@ export default function Map({
     );
   }, [showLoginDialog, loginForm, loginError]);
 
+  // Load user from localStorage on component mount
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      try {
+        setCurrentUser(JSON.parse(savedUser));
+      } catch (error) {
+        console.error('Failed to parse stored user:', error);
+      }
+    }
+  }, []);
+
+  // Updated user info/login button section with improved styling
+  const UserControls = useMemo(() => {
+    // Don't show the login button in map component when we're in the main app page
+    // This prevents duplicate login buttons
+    if (window.location.pathname === '/') {
+      return null;
+    }
+    
+    return (
+      <div className="absolute top-4 right-4 z-20">
+        {currentUser ? (
+          <div className="bg-blue-600 text-white rounded-full py-2 px-4 shadow-md flex items-center space-x-2">
+            <span className="font-medium">{currentUser.username}</span>
+            <button 
+              onClick={() => {
+                setCurrentUser(null);
+                localStorage.removeItem('user');
+                window.location.reload(); // Refresh to ensure all components update
+              }}
+              className="text-white hover:text-red-200 ml-2"
+              aria-label="Logout"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setShowLoginDialog(true)}
+            className="bg-white hover:bg-blue-50 text-blue-700 font-medium rounded-full py-1 px-3 shadow-md transition-colors"
+          >
+            Login
+          </button>
+        )}
+      </div>
+    );
+  }, [currentUser]);
+
+  // Add this useEffect after the dialogLocation useEffect
+  useEffect(() => {
+    // Calculate distance when both user location and dialog location are available
+    if (userLocation && dialogLocation) {
+      const [userLng, userLat] = userLocation;
+      const distance = calculateDistance(
+        userLat, 
+        userLng, 
+        dialogLocation.latitude, 
+        dialogLocation.longitude
+      );
+      setDistanceToPlace(distance);
+    } else {
+      setDistanceToPlace(null);
+    }
+  }, [userLocation, dialogLocation]);
+
   return (
     <>
       <div className="relative w-full h-full" style={{ minHeight: "400px" }}>
@@ -940,28 +1010,7 @@ export default function Map({
         )}
 
         {/* User info/login button */}
-        <div className="absolute top-4 right-4 z-20">
-          {currentUser ? (
-            <div className="bg-white rounded-full py-1 px-3 shadow-md flex items-center space-x-2">
-              <span className="text-sm font-medium text-blue-800">{currentUser.username}</span>
-              <button 
-                onClick={() => setCurrentUser(null)}
-                className="text-gray-500 hover:text-red-500"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => setShowLoginDialog(true)}
-              className="bg-white hover:bg-blue-50 text-blue-700 font-medium rounded-full py-1 px-3 shadow-md transition-colors"
-            >
-              Login
-            </button>
-          )}
-        </div>
+        {UserControls}
 
         {/* Button to get initial location if not yet obtained */}
         {!userLocation && !locationError && isMapInitialized && (
@@ -1187,6 +1236,32 @@ export default function Map({
                 Leave a Review
               </button>
             </div>
+
+            {/* After the "Leave a Review" button, add this Distance display */}
+            {userLocation && distanceToPlace !== null && (
+              <div className="mt-3">
+                <button
+                  onClick={() => {
+                    // You could add navigation functionality here in the future
+                    if (map.current && dialogLocation) {
+                      // Draw a line between points or show route
+                      // This is placeholder for future enhancement
+                      alert(`Distance to ${dialogLocation.name}: ${distanceToPlace.toFixed(2)} km`);
+                    }
+                  }}
+                  className="w-full flex items-center justify-center text-xs bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition gap-2"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                  <span>
+                    {distanceToPlace < 1
+                      ? `${(distanceToPlace * 1000).toFixed(0)}m from here`
+                      : `${distanceToPlace.toFixed(1)}km from here`}
+                  </span>
+                </button>
+              </div>
+            )}
 
             {/* Location coordinates */}
             <div className="mt-3 text-[10px] text-gray-400 flex justify-between">

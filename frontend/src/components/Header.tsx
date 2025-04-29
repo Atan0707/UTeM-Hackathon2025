@@ -23,7 +23,7 @@ export default function Header() {
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <Link href="/" className="text-blackfont-bold text-xl">
+              <Link href="/" className="text-black font-bold text-xl">
                 Visit Melaka 2025
               </Link>
             </div>
