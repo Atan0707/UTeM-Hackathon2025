@@ -128,14 +128,17 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>STATIC_CONCPP;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>"C:\Users\hariz\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\include\jdbc\mysql_connection.h";C:\Users\hariz\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\include\jdbc\mysql_driver.h;C:\Users\hariz\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\include\jdbc\cppconn\prepared_statement.h;C:\Users\hariz\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\include\jdbc\cppconn\statement.h;C:\Users\hariz\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\include\jdbc\cppconn;C:\Users\hariz\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\include\jdbc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>"C:\Users\hariz\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\include\jdbc\mysql_driver.h";C:\Users\hariz\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\include\jdbc\mysql_driver.h;C:\Users\hariz\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\include\jdbc\cppconn\prepared_statement.h;C:\Users\hariz\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\include\jdbc;C:\Users\hariz\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\include\jdbc\cppconn;C:\Users\hariz\Downloads\mysql-connector-c++-9.3.0-winx64\mysql-connector-c++-9.3.0-winx64\lib64\vs14;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mysqlcppconn-static.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

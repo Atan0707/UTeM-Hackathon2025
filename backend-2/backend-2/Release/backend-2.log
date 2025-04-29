@@ -1,0 +1,135 @@
+﻿  Installing vcpkg dependencies to C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\vcpkg_installed\x86-windows\
+  "C:\Users\hariz\Desktop\UTeM-Hackathon2025\dependencies\vcpkg\vcpkg.exe" install  --x-wait-for-lock --triplet "x86-windows" --vcpkg-root "C:\Users\hariz\Desktop\UTeM-Hackathon2025\dependencies\vcpkg\\" "--x-manifest-root=C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\\" "--x-install-root=C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\vcpkg_installed\x86-windows\\" 
+  Detecting compiler hash for triplet x64-windows...
+  Compiler found: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64/cl.exe
+  Detecting compiler hash for triplet x86-windows...
+  Compiler found: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x86/cl.exe
+  The following packages will be built and installed:
+      asio:x86-windows@1.32.0
+      openssl:x86-windows@3.5.0#1
+    * vcpkg-cmake:x64-windows@2024-04-23
+    * vcpkg-cmake-config:x64-windows@2024-05-23
+    * vcpkg-cmake-get-vars:x64-windows@2024-09-22
+      zlib:x86-windows@1.3.1
+  Additional packages (*) will be modified to complete this operation.
+  Restored 3 package(s) from C:\Users\hariz\AppData\Local\vcpkg\archives in 238 ms. Use --debug to see more details.
+  Installing 1/6 vcpkg-cmake-config:x64-windows@2024-05-23...
+  Elapsed time to handle vcpkg-cmake-config:x64-windows: 16.4 ms
+  vcpkg-cmake-config:x64-windows package ABI: c775df2ee4244c0c088ff8fc766668668f2b6b062d09e07892fe77989dee6fd9
+  Installing 2/6 vcpkg-cmake:x64-windows@2024-04-23...
+  Elapsed time to handle vcpkg-cmake:x64-windows: 25.4 ms
+  vcpkg-cmake:x64-windows package ABI: a41d29268e48b859e0182b2cdfea16c5683d953a2fe74a3aacba1b3f85176da9
+  Installing 3/6 asio:x86-windows@1.32.0...
+  Building asio:x86-windows@1.32.0...
+  -- Using cached chriskohlhoff-asio-asio-1-32-0.tar.gz
+  -- Cleaning sources at C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/buildtrees/asio/src/sio-1-32-0-e4cfb7a1b9.clean. Use --editable to skip cleaning for the packages you specify.
+  -- Extracting source C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/downloads/chriskohlhoff-asio-asio-1-32-0.tar.gz
+  -- Using source at C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/buildtrees/asio/src/sio-1-32-0-e4cfb7a1b9.clean
+  -- Found external ninja('1.12.1').
+  -- Configuring x86-windows
+  -- Building x86-windows-rel
+  -- Fixing pkgconfig file: C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/packages/asio_x86-windows/share/pkgconfig/asio.pc
+  -- Using cached msys2-mingw-w64-x86_64-pkgconf-1~2.3.0-1-any.pkg.tar.zst
+  -- Using cached msys2-msys2-runtime-3.5.4-2-x86_64.pkg.tar.zst
+  -- Using msys root at C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/downloads/tools/msys2/21caed2f81ec917b
+  -- Installing: C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/packages/asio_x86-windows/share/asio/asio-config.cmake
+  -- Installing: C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/packages/asio_x86-windows/share/asio/copyright
+  -- Performing post-build validation
+  Starting submission of asio:x86-windows@1.32.0 to 1 binary cache(s) in the background
+  Elapsed time to handle asio:x86-windows: 24 s
+  asio:x86-windows package ABI: 914d73179785a714b93ef366590f30a91aaf665db52871592692499347f6f470
+  Installing 4/6 vcpkg-cmake-get-vars:x64-windows@2024-09-22...
+  Elapsed time to handle vcpkg-cmake-get-vars:x64-windows: 37.4 ms
+  vcpkg-cmake-get-vars:x64-windows package ABI: bdee5adf30189c674c117f3563c5afee6ccdfa871ff6f2e253aee055b597d862
+  Installing 5/6 openssl:x86-windows@3.5.0#1...
+  Building openssl:x86-windows@3.5.0#1...
+  -- Using cached openssl-certstore-crash-2b5e7253b9a6a4cde64d3f2f22d71272f6ad32c5.patch
+  -- Using cached openssl-openssl-openssl-3.5.0.tar.gz
+  -- Cleaning sources at C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/buildtrees/openssl/src/nssl-3.5.0-3b91ebed43.clean. Use --editable to skip cleaning for the packages you specify.
+  -- Extracting source C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/downloads/openssl-openssl-openssl-3.5.0.tar.gz
+  -- Applying patch cmake-config.patch
+  -- Applying patch command-line-length.patch
+  -- Applying patch script-prefix.patch
+  -- Applying patch windows/install-layout.patch
+  -- Applying patch windows/install-pdbs.patch
+  -- Applying patch C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/downloads/openssl-certstore-crash-2b5e7253b9a6a4cde64d3f2f22d71272f6ad32c5.patch
+  -- Applying patch unix/android-cc.patch
+  -- Applying patch unix/move-openssldir.patch
+  -- Applying patch unix/no-empty-dirs.patch
+  -- Applying patch unix/no-static-libs-for-shared.patch
+  -- Using source at C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/buildtrees/openssl/src/nssl-3.5.0-3b91ebed43.clean
+  -- Found external ninja('1.12.1').
+  -- Getting CMake variables for x86-windows
+  -- Getting CMake variables for x86-windows
+  -- Prerunning x86-windows-dbg
+  -- Building x86-windows-dbg
+  -- Prerunning x86-windows-rel
+  -- Building x86-windows-rel
+  -- Fixing pkgconfig file: C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/packages/openssl_x86-windows/lib/pkgconfig/libcrypto.pc
+  -- Fixing pkgconfig file: C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/packages/openssl_x86-windows/lib/pkgconfig/libssl.pc
+  -- Fixing pkgconfig file: C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/packages/openssl_x86-windows/lib/pkgconfig/openssl.pc
+  -- Using cached msys2-mingw-w64-x86_64-pkgconf-1~2.3.0-1-any.pkg.tar.zst
+  -- Using cached msys2-msys2-runtime-3.5.4-2-x86_64.pkg.tar.zst
+  -- Using msys root at C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/downloads/tools/msys2/21caed2f81ec917b
+  -- Fixing pkgconfig file: C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/packages/openssl_x86-windows/debug/lib/pkgconfig/libcrypto.pc
+  -- Fixing pkgconfig file: C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/packages/openssl_x86-windows/debug/lib/pkgconfig/libssl.pc
+  -- Fixing pkgconfig file: C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/packages/openssl_x86-windows/debug/lib/pkgconfig/openssl.pc
+  -- Installing: C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/packages/openssl_x86-windows/share/openssl/usage
+  -- Installing: C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/packages/openssl_x86-windows/share/openssl/copyright
+  -- Performing post-build validation
+  Starting submission of openssl:x86-windows@3.5.0#1 to 1 binary cache(s) in the background
+  Elapsed time to handle openssl:x86-windows: 7.2 min
+  openssl:x86-windows package ABI: d171d3b32b6161ca3580e8775f620dcaedd9f4e925dbc97f087df068b0b4da43
+  Completed submission of asio:x86-windows@1.32.0 to 1 binary cache(s) in 823 ms
+  Installing 6/6 zlib:x86-windows@1.3.1...
+  Building zlib:x86-windows@1.3.1...
+  -- Using cached madler-zlib-v1.3.1.tar.gz
+  -- Cleaning sources at C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/buildtrees/zlib/src/v1.3.1-2e5db616bf.clean. Use --editable to skip cleaning for the packages you specify.
+  -- Extracting source C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/downloads/madler-zlib-v1.3.1.tar.gz
+  -- Applying patch 0001-Prevent-invalid-inclusions-when-HAVE_-is-set-to-0.patch
+  -- Applying patch 0002-build-static-or-shared-not-both.patch
+  -- Applying patch 0003-android-and-mingw-fixes.patch
+  -- Using source at C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/buildtrees/zlib/src/v1.3.1-2e5db616bf.clean
+  -- Found external ninja('1.12.1').
+  -- Configuring x86-windows
+  -- Building x86-windows-dbg
+  -- Building x86-windows-rel
+  -- Installing: C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/packages/zlib_x86-windows/share/zlib/vcpkg-cmake-wrapper.cmake
+  -- Fixing pkgconfig file: C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/packages/zlib_x86-windows/lib/pkgconfig/zlib.pc
+  -- Using cached msys2-mingw-w64-x86_64-pkgconf-1~2.3.0-1-any.pkg.tar.zst
+  -- Using cached msys2-msys2-runtime-3.5.4-2-x86_64.pkg.tar.zst
+  -- Using msys root at C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/downloads/tools/msys2/21caed2f81ec917b
+  -- Fixing pkgconfig file: C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/packages/zlib_x86-windows/debug/lib/pkgconfig/zlib.pc
+  -- Installing: C:/Users/hariz/Desktop/UTeM-Hackathon2025/dependencies/vcpkg/packages/zlib_x86-windows/share/zlib/copyright
+  -- Performing post-build validation
+  Starting submission of zlib:x86-windows@1.3.1 to 1 binary cache(s) in the background
+  Elapsed time to handle zlib:x86-windows: 9.3 s
+  zlib:x86-windows package ABI: 35e2e95e23c23c61e13ad36e35f72572842c58fd1a2e1897455e57107c9cfac7
+  Total install time: 7.8 min
+  asio provides CMake targets:
+  
+    # this is heuristically generated, and may not be correct
+    find_package(asio CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE asio::asio)
+  
+  asio provides pkg-config modules:
+  
+    # A cross-platform C++ library for network and low-level I/O programming that provides developers with a consistent asynchronous model using a modern C++ approach.
+    asio
+  
+  openssl is compatible with built-in CMake targets:
+  
+    find_package(OpenSSL REQUIRED)
+    target_link_libraries(main PRIVATE OpenSSL::SSL)
+    target_link_libraries(main PRIVATE OpenSSL::Crypto)
+  
+  The package zlib is compatible with built-in CMake targets:
+  
+      find_package(ZLIB REQUIRED)
+      target_link_libraries(main PRIVATE ZLIB::ZLIB)
+  
+  Completed submission of openssl:x86-windows@3.5.0#1 to 1 binary cache(s) in 2 s
+  Waiting for 1 remaining binary cache submissions...
+  Completed submission of zlib:x86-windows@1.3.1 to 1 binary cache(s) in 119 ms (1/1)
+  main.cpp
+C:\Users\hariz\Desktop\UTeM-Hackathon2025\backend-2\backend-2\main.cpp(2,10): error C1083: Cannot open include file: 'mysql_driver.h': No such file or directory

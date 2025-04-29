@@ -53,6 +53,7 @@ export default function Map({
   const [dialogLocation, setDialogLocation] = useState<LocationUI | null>(null);
   const locationRequestedRef = useRef(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const isNavigatingRef = useRef(false);
   const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [review, setReview] = useState<Review>({ rating: 0, comment: '' });
   const [hoveredRating, setHoveredRating] = useState(0);
@@ -69,139 +70,149 @@ export default function Map({
   const navigateToLocation = useCallback((location: LocationUI) => {
     if (!map.current || !isMapInitialized) return;
     
+    // If already navigating, prevent multiple animations
+    if (isNavigatingRef.current) return;
+    isNavigatingRef.current = true;
+    
     // Set both states immediately
     setSelectedLocation(location.id);
     setDialogLocation(location);
 
-    // Create or update marker for the selected location
-    if (!locationMarkers.current[location.id]) {
-      // Create a new marker with category emoji
-      const markerElement = document.createElement('div');
-      markerElement.className = 'marker';
-      markerElement.style.width = '40px';
-      markerElement.style.height = '40px';
-      markerElement.style.backgroundColor = 'white';
-      markerElement.style.borderRadius = '50%';
-      markerElement.style.display = 'flex';
-      markerElement.style.alignItems = 'center';
-      markerElement.style.justifyContent = 'center';
-      markerElement.style.fontSize = '20px';
-      markerElement.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
-      markerElement.style.border = '2px solid #4a90e2';
-      markerElement.innerHTML = getCategoryEmoji(location.category);
+    // Helper function to create or update marker
+    const getOrCreateMarker = (locationId: string, loc: LocationUI) => {
+      if (!locationMarkers.current[locationId] && map.current) {
+        // Create a new marker with category emoji
+        const markerElement = document.createElement('div');
+        markerElement.className = 'marker';
+        markerElement.style.width = '40px';
+        markerElement.style.height = '40px';
+        markerElement.style.backgroundColor = 'white';
+        markerElement.style.borderRadius = '50%';
+        markerElement.style.display = 'flex';
+        markerElement.style.alignItems = 'center';
+        markerElement.style.justifyContent = 'center';
+        markerElement.style.fontSize = '20px';
+        markerElement.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+        markerElement.style.border = '2px solid #4a90e2';
+        markerElement.style.cursor = 'pointer';
+        markerElement.innerHTML = getCategoryEmoji(loc.category);
 
-      // Create popup content
-      const popupContent = document.createElement('div');
-      popupContent.className = 'popup-content';
-      popupContent.innerHTML = `
-        <div class="p-2">
-          <h3 class="font-bold text-sm">${location.name}</h3>
-          <p class="text-xs text-gray-600">${location.description}</p>
-        </div>
-      `;
+        // Create popup content
+        const popupContent = document.createElement('div');
+        popupContent.className = 'popup-content';
+        popupContent.innerHTML = `
+          <div class="p-2">
+            <h3 class="font-bold text-sm">${loc.name}</h3>
+            <p class="text-xs text-gray-600">${loc.description}</p>
+          </div>
+        `;
 
-      // Create and add marker
-      const marker = new maplibregl.Marker({
-        element: markerElement,
-        anchor: 'bottom'
-      })
-        .setLngLat([location.lng, location.lat])
-        .setPopup(new maplibregl.Popup({ offset: 25 })
-          .setDOMContent(popupContent))
-        .addTo(map.current);
+        // Create and add marker
+        const marker = new maplibregl.Marker({
+          element: markerElement,
+          anchor: 'bottom'
+        })
+          .setLngLat([loc.lng, loc.lat])
+          .setPopup(new maplibregl.Popup({ 
+            offset: 25,
+            closeButton: false,
+            closeOnClick: false
+          })
+            .setDOMContent(popupContent))
+          .addTo(map.current);
 
-      locationMarkers.current[location.id] = marker;
-    } else {
-      // Update existing marker's popup
-      const popupContent = document.createElement('div');
-      popupContent.className = 'popup-content';
-      popupContent.innerHTML = `
-        <div class="p-2">
-          <h3 class="font-bold text-sm">${location.name}</h3>
-          <p class="text-xs text-gray-600">${location.description}</p>
-        </div>
-      `;
-      locationMarkers.current[location.id].setPopup(
-        new maplibregl.Popup({ offset: 25 })
-          .setDOMContent(popupContent)
-      );
-    }
+        locationMarkers.current[locationId] = marker;
+        return marker;
+      } 
+      
+      return locationMarkers.current[locationId];
+    };
 
     // Close any open popups first to avoid visual glitches
-    if (selectedLocation && locationMarkers.current[selectedLocation]) {
-      const popup = locationMarkers.current[selectedLocation].getPopup();
+    Object.values(locationMarkers.current).forEach(marker => {
+      const popup = marker.getPopup();
       if (popup && popup.isOpen()) {
         popup.remove();
       }
-    }
+    });
 
-    // Add markers if they don't exist yet
-    if (!locationMarkers.current[location.id] && map.current) {
-      const popup = new maplibregl.Popup({ 
-        offset: 25,
-        closeButton: false
-      })
-        .setHTML(`
-          <div>
-            <h3 class="font-medium">${location.name}</h3>
-            <p class="text-sm">${location.description}</p>
-            <p class="text-xs text-gray-500 mt-1">Lat: ${location.lat.toFixed(6)}, Lng: ${location.lng.toFixed(6)}</p>
-          </div>
-        `);
+    // Get or create marker for selected location
+    const marker = getOrCreateMarker(location.id, location);
+    
+    // Simplified two-step animation approach
+    if (map.current) {
+      // Always zoom out slightly first
+      const originalZoom = map.current.getZoom();
+      const targetZoom = Math.max(originalZoom - 2, 10);
       
-      const el = document.createElement('div');
-      el.className = 'location-marker';
-      el.style.width = '30px';
-      el.style.height = '30px';
-      el.style.backgroundImage = 'url(/images/marker.png)';
-      el.style.backgroundSize = 'contain';
-      el.style.backgroundRepeat = 'no-repeat';
-      el.style.cursor = 'pointer';
-
-      // Set the marker position with exact coordinates
-      const marker = new maplibregl.Marker(el)
-        .setLngLat([location.lng, location.lat])
-        .setPopup(popup)
-        .addTo(map.current);
-      
-      locationMarkers.current[location.id] = marker;
-    }
-
-
-    // First zoom out from current location
-    if (selectedLocation && locationMarkers.current[selectedLocation]) {
-      const currentMarker = locationMarkers.current[selectedLocation];
-      const currentLngLat = currentMarker.getLngLat();
-      
-      map.current.flyTo({
-        center: [currentLngLat.lng, currentLngLat.lat],
-        zoom: 12,
-        essential: true,
-        duration: 1000,
-        curve: 1.42
+      // First step: zoom out to provide context
+      map.current.easeTo({
+        zoom: targetZoom,
+        pitch: 50, // Tilt for visual interest
+        duration: 700,
+        essential: true
       });
-    }
-
-    // Then fly to new location with a slight delay
-    setTimeout(() => {
-      if (map.current) {
-        map.current.flyTo({
-          center: [location.lng, location.lat],
-          zoom: 16,
-          essential: true,
-          duration: 2000,
-          padding: { top: 50, bottom: 150, left: 50, right: 50 },
-          curve: 1.42
-        });
-
-        // Show the popup after navigation
-        if (locationMarkers.current[location.id]) {
-          locationMarkers.current[location.id].togglePopup();
+      
+      // Second step: fly to new location
+      setTimeout(() => {
+        if (map.current) {
+          map.current.flyTo({
+            center: [location.lng, location.lat],
+            zoom: 16,
+            pitch: 45,
+            speed: 0.7, // Slower for smoother effect
+            curve: 1.2, // Gentler curve
+            essential: true,
+            duration: 1800,
+            padding: { top: 50, bottom: 150, left: 50, right: 50 },
+          });
+          
+          // Show popup after animation completes
+          setTimeout(() => {
+            marker.togglePopup();
+            isNavigatingRef.current = false;
+          }, 1900);
         }
-      }
-    }, 1000);
-
-  }, [isMapInitialized, selectedLocation]);
+      }, 750);
+    }
+  }, [isMapInitialized]);
+  
+  // Helper function to calculate bearing between two points (direction)
+  const getBearing = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
+    const toRadians = (degrees: number) => degrees * Math.PI / 180;
+    const toDegrees = (radians: number) => radians * 180 / Math.PI;
+    
+    const startLat = toRadians(lat1);
+    const startLng = toRadians(lng1);
+    const destLat = toRadians(lat2);
+    const destLng = toRadians(lng2);
+    
+    const y = Math.sin(destLng - startLng) * Math.cos(destLat);
+    const x = Math.cos(startLat) * Math.sin(destLat) -
+              Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLng - startLng);
+    let bearing = toDegrees(Math.atan2(y, x));
+    bearing = (bearing + 360) % 360; // Normalize to 0-360
+    
+    return bearing;
+  };
+  
+  // Helper function to calculate distance between two coordinates
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 6371; // Radius of the earth in km
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lon2 - lon1);
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    const d = R * c; // Distance in km
+    return d;
+  };
+  
+  const deg2rad = (deg: number): number => {
+    return deg * (Math.PI/180);
+  };
 
   // Memoize getUserLocation function to prevent recreation on every render
   const getUserLocation = useCallback(() => {
@@ -332,6 +343,8 @@ export default function Map({
         style: mapStyle,
         center,
         zoom,
+        pitch, // Using pitch parameter now
+        bearing, // Using bearing parameter now
         attributionControl: false // Reduce network requests for attribution tiles
       });
 
@@ -354,69 +367,64 @@ export default function Map({
 
           // --- 3D Buildings Layer Logic ---
           if (enable3DBuildings && process.env.NEXT_PUBLIC_MAPTILER_API_KEY) {
-            try {
-              const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_API_KEY;
-              const map = maplibregl as any;
-              // Find the first symbol layer with a text-field to insert below
-              const layers = map.current.getStyle().layers;
-              let labelLayerId = undefined;
-              for (let i = 0; i < layers.length; i++) {
-                if (layers[i].type === 'symbol' && layers[i].layout && layers[i].layout['text-field']) {
-                  labelLayerId = layers[i].id;
-                  break;
-                }
+            const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_API_KEY;
+            const mapInstance = map.current;
+            // Find the first symbol layer with a text-field to insert below
+            const layers = mapInstance.getStyle().layers;
+            let labelLayerId = undefined;
+            for (let i = 0; i < layers.length; i++) {
+              if (layers[i].type === 'symbol' && 
+                  layers[i].layout && 
+                  'text-field' in (layers[i].layout || {})) {
+                labelLayerId = layers[i].id;
+                break;
               }
-              // Add the OpenMapTiles vector source for buildings
-              if (!map.current.getSource('openmaptiles')) {
-                map.current.addSource('openmaptiles', {
-                  url: `https://api.maptiler.com/tiles/v3/tiles.json?key=${MAPTILER_KEY}`,
-                  type: 'vector',
-                });
-              }
-              // Add the 3D buildings layer with enhanced visibility
-              if (!map.current.getLayer('3d-buildings')) {
-                map.current.addLayer(
-                  {
-                    'id': '3d-buildings',
-                    'source': 'openmaptiles',
-                    'source-layer': 'building',
-                    'type': 'fill-extrusion',
-                    'minzoom': 14,
-                    'filter': ['!=', ['get', 'hide_3d'], true],
-                    'paint': {
-                      'fill-extrusion-color': [
-                        'interpolate',
-                        ['linear'],
-                        ['get', 'render_height'],
-                        0, '#e0e0e0',
-                        50, '#a8c7ff',
-                        100, '#4d8eff',
-                        200, '#1a4dff',
-                        400, '#001a66'
-                      ],
-                      'fill-extrusion-height': [
-                        'interpolate',
-                        ['linear'],
-                        ['zoom'],
-                        14, 0,
-                        15, ['*', ['get', 'render_height'], 1.2],
-                        16, ['*', ['get', 'render_height'], 1.2]
-                      ],
-                      'fill-extrusion-base': ['case',
-                        ['>=', ['get', 'zoom'], 15],
-                        ['get', 'render_min_height'], 0
-                      ],
-                      'fill-extrusion-opacity': 0.9,
-                      'fill-extrusion-ambient-occlusion': true,
-                      'fill-extrusion-ambient-occlusion-intensity': 0.3,
-                      'fill-extrusion-ambient-occlusion-radius': 2
-                    }
-                  },
-                  labelLayerId
-                );
-              }
-            } catch (error) {
-              console.error('Error adding 3D buildings:', error);
+            }
+            // Add the OpenMapTiles vector source for buildings
+            if (!mapInstance.getSource('openmaptiles')) {
+              mapInstance.addSource('openmaptiles', {
+                url: `https://api.maptiler.com/tiles/v3/tiles.json?key=${MAPTILER_KEY}`,
+                type: 'vector',
+              });
+            }
+            // Add the 3D buildings layer with enhanced visibility
+            if (!mapInstance.getLayer('3d-buildings')) {
+              mapInstance.addLayer(
+                {
+                  'id': '3d-buildings',
+                  'source': 'openmaptiles',
+                  'source-layer': 'building',
+                  'type': 'fill-extrusion',
+                  'minzoom': 14, // Show buildings at lower zoom level
+                  'filter': ['!=', ['get', 'hide_3d'], true],
+                  'paint': {
+                    'fill-extrusion-color': [
+                      'interpolate',
+                      ['linear'],
+                      ['get', 'render_height'],
+                      0, '#e0e0e0', // Light gray for low buildings
+                      50, '#a8c7ff', // Light blue for medium buildings
+                      100, '#4d8eff', // Blue for tall buildings
+                      200, '#1a4dff', // Dark blue for very tall buildings
+                      400, '#001a66'  // Very dark blue for skyscrapers
+                    ],
+                    'fill-extrusion-height': [
+                      'interpolate',
+                      ['linear'],
+                      ['zoom'],
+                      14, 0,
+                      15, ['*', ['get', 'render_height'], 1.2], // Increase height by 20%
+                      16, ['*', ['get', 'render_height'], 1.2]
+                    ],
+                    'fill-extrusion-base': ['case',
+                      ['>=', ['get', 'zoom'], 15],
+                      ['get', 'render_min_height'], 0
+                    ],
+                    'fill-extrusion-opacity': 0.9, // More opaque
+                  }
+                },
+                labelLayerId
+              );
             }
           }
         }
@@ -457,7 +465,7 @@ export default function Map({
         map.current = null;
       }
     };
-  }, [center, zoom, style]);
+  }, [center, zoom, style, pitch, bearing]);
 
   // Add a useEffect to handle dialog visibility
   useEffect(() => {
@@ -615,21 +623,21 @@ export default function Map({
           </button>
         )}
 
-        {/* Category Filter UI */}
-        <div className="absolute left-0 right-0 top-2 z-20 flex justify-center">
-          <div className="bg-white rounded-full shadow px-4 py-2 flex gap-2 items-center">
-            {categories.map(category => (
-              <button
-                key={category}
-                className={`px-3 py-1 rounded-full font-medium text-sm transition
-                  ${selectedCategory === category ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-700 hover:bg-blue-100'}`}
-                onClick={() => setSelectedCategory(category)}
-              >
-                {category !== 'All' && getCategoryEmoji(category)} {category}
-              </button>
-            ))}
-          </div>
+      {/* Category Filter UI */}
+      <div className="absolute left-0 right-0 top-2 z-20 flex justify-center pointer-events-none">
+        <div className="bg-white rounded-full shadow px-4 py-2 flex gap-2 items-center pointer-events-auto">
+          {categories.map(category => (
+            <button
+              key={category}
+              className={`px-3 py-1 rounded-full font-medium text-sm transition
+                ${selectedCategory === category ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-700 hover:bg-blue-100'}`}
+              onClick={() => setSelectedCategory(category)}
+            >
+              {category !== 'All' && getCategoryEmoji(category)} {category}
+            </button>
+          ))}
         </div>
+      </div>
 
         {/* Location cards at the bottom */}
         <div className="absolute bottom-4 left-0 right-0 z-10 px-4">
@@ -730,31 +738,31 @@ export default function Map({
             <div className="mt-4 mb-3">
               <h4 className="font-medium text-sm mb-2 text-blue-900">User Reviews</h4>
 
-              {/* Review 1 */}
-              <div className="mb-3 pb-3 border-b border-gray-100">
-                <div className="flex items-center justify-between">
-                  <p className="text-xs font-semibold text-gray-800">Ahmad Firdaus</p>
-                  <div className="flex text-yellow-400">
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                    </svg>
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                    </svg>
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                    </svg>
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                    </svg>
-                    <svg className="w-3 h-3" fill="gray" stroke="currentColor" strokeWidth="0.5" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                    </svg>
-                  </div>
+            {/* Review 1 */}
+            <div className="mb-3 pb-3 border-b border-gray-100">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold text-gray-800">Ahmad Firdaus</p>
+                <div className="flex text-yellow-400">
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <svg className="w-3 h-3" fill="gray" stroke="currentColor" strokeWidth="0.5" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
                 </div>
-                <p className="text-xs text-gray-600 mt-1">Great place to visit! The ambiance is amazing and the staff are very friendly.</p>
-                <p className="text-[10px] text-gray-400 mt-1">2 days ago</p>
               </div>
+              <p className="text-xs text-gray-600 mt-1">Great place to visit! The ambiance is amazing and the staff are very friendly.</p>
+              <p className="text-[10px] text-gray-400 mt-1">2 days ago</p>
+            </div>
 
               {/* Review 2 */}
               <div className="mb-3 pb-3 border-b border-gray-100">
