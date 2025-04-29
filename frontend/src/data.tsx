@@ -6,8 +6,36 @@ export interface LocationUI {
     description: string;
     imageUrl: string;
     category?: string;
+    avg_rating?: number;
+    review_count?: number;
 }
 
+// Helper function to convert backend Place data to LocationUI format
+export const convertPlaceToLocationUI = (place: {
+  place_id: number;
+  name: string;
+  description?: string;
+  image_url?: string;
+  category?: string;
+  latitude: number;
+  longitude: number;
+  avg_rating?: number;
+  review_count?: number;
+}): LocationUI => {
+    return {
+        id: place.place_id.toString(),
+        lng: place.longitude,
+        lat: place.latitude,
+        name: place.name,
+        description: place.description || '',
+        imageUrl: place.image_url || '',
+        category: place.category || '',
+        avg_rating: place.avg_rating || 0,
+        review_count: place.review_count || 0
+    };
+};
+
+// Sample data - this will be replaced by API data in production
 export const locations: LocationUI[] = [
     {
         id: 'mahkota parade',
@@ -16,7 +44,9 @@ export const locations: LocationUI[] = [
         name: 'Mahkota Parade',
         description: 'Shopping Center near Klebang Beach',
         imageUrl: 'https://tourismmelaka.com/wp-content/uploads/2017/11/58_Mahkota-Parade.jpg',
-        category: 'Shopping'
+        category: 'Shopping',
+        avg_rating: 4.5,
+        review_count: 120
     },
     {
         id: 'aeon bandaraya',
@@ -25,7 +55,9 @@ export const locations: LocationUI[] = [
         name: 'Aeon Bandaraya',
         description: 'Shopping Center in Bandaraya Melaka',
         imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Northeastern_side_of_Aeon_Bandaraya_Melaka.JPG/1024px-Northeastern_side_of_Aeon_Bandaraya_Melaka.JPG',
-        category: 'Shopping'
+        category: 'Shopping',
+        avg_rating: 4.2,
+        review_count: 85
     },
     {
         id: 'aeon ayer keroh',
@@ -34,7 +66,9 @@ export const locations: LocationUI[] = [
         name: 'Aeon Ayer Keroh',
         description: 'Shopping Center in Ayer Keroh',
         imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjw7cgRC3IkdCrJKHqNMzImhk_0cAc12bHgw&s',
-        category: 'Shopping'
+        category: 'Shopping',
+        avg_rating: 4.3,
+        review_count: 92
     },
     {
         id: 'melaka premium outlet',
@@ -43,7 +77,9 @@ export const locations: LocationUI[] = [
         name: 'Melaka Premium Outlet',
         description: 'Shopping Center in Melaka',
         imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMkrKXmIfP0EruQdW-VSkXmKVAVG9aqcEJmg&s',
-        category: 'Shopping'
+        category: 'Shopping',
+        avg_rating: 4.7,
+        review_count: 110
     },
     {
         id: 'melaka wonderland',
@@ -52,7 +88,9 @@ export const locations: LocationUI[] = [
         name: 'Melaka Wonderland',
         description: 'Water Theme Park in Ayer Keroh',
         imageUrl: 'https://images.t2u.io/upload/event/listing/0-35554-AWSS38ed7b4c9-681e-44cf-8c3f-55fc6b3351e5-nde3.jpg',
-        category: 'Attraction'
+        category: 'Attraction',
+        avg_rating: 4.1,
+        review_count: 150
     },
     {
         id: 'zoo melaka',
@@ -61,7 +99,9 @@ export const locations: LocationUI[] = [
         name: 'Zoo Melaka',
         description: 'Zoo in Ayer Keroh',
         imageUrl: 'https://www.zoomelaka.gov.my/_include/img/profile/kepper-talkbaru.jpg',
-        category: 'Attraction'
+        category: 'Attraction',
+        avg_rating: 4.0,
+        review_count: 130
     },
     {
         id: 'taman buaya & rekreasi melaka',
@@ -70,7 +110,9 @@ export const locations: LocationUI[] = [
         name: 'Taman Buaya & Rekreasi Melaka (Melaka Crocodile & ​​Recreational Park)',
         description: 'Crocodile Park in Ayer Keroh',
         imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCUbQfQ92Try7E9Wfgq8ZatSokcLAxJzQGYg&s',
-        category: 'Attraction'
+        category: 'Attraction',
+        avg_rating: 3.9,
+        review_count: 95
     },
     {
         id: 'a famosa water theme park',
@@ -79,7 +121,9 @@ export const locations: LocationUI[] = [
         name: 'A Famosa Water Theme Park (Water World)',
         description: 'Water Park in A Famosa',
         imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSa1cwLF_lXpCh8BUEWcNfnR23JvNwBvp-U9w&s',
-        category: 'Attraction'
+        category: 'Attraction',
+        avg_rating: 4.4,
+        review_count: 180
     },
     {
         id: 'menara-taming-sari',
@@ -88,7 +132,9 @@ export const locations: LocationUI[] = [
         name: 'Menara Taming Sari',
         description: 'Revolving tower offering panoramic views of Melaka',
         imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3MmfxlQi4_DbEL3Hhg_jv-kc5M993opAG3w&s',
-        category: 'Attraction'
+        category: 'Attraction',
+        avg_rating: 4.6,
+        review_count: 210
     },
     {
         id: 'melaka-river-cruise',
@@ -97,7 +143,9 @@ export const locations: LocationUI[] = [
         name: 'Melaka River Cruise',
         description: 'Scenic boat ride along the Melaka River',
         imageUrl: 'https://image.kkday.com/v2/image/get/w_1900%2Cc_fit%2Cq_55/s1.kkday.com/product_103696/20210827105154_XA3rW/jpg',
-        category: 'Attraction'
+        category: 'Attraction',
+        avg_rating: 4.5,
+        review_count: 175
     },
     {
         id: 'cheng-hoon-teng-temple',
@@ -106,7 +154,9 @@ export const locations: LocationUI[] = [
         name: 'Cheng Hoon Teng Temple',
         description: 'Oldest Chinese temple in Malaysia',
         imageUrl: 'https://gowhere.my/wp-content/uploads/2015/10/Cheng-Hoon-Teng-e1445227982909.jpg',
-        category: 'Attraction'
+        category: 'Heritage',
+        avg_rating: 4.3,
+        review_count: 88
     },
     {
         id: 'kampung-kling-mosque',
@@ -115,7 +165,9 @@ export const locations: LocationUI[] = [
         name: 'Kampung Kling Mosque',
         description: 'One of the oldest mosques in Melaka',
         imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLPkmN8xhkzVaCSoQPiQ6VzhwM_-j0SqWi-g&s',
-        category: 'Attraction'
+        category: 'Heritage',
+        avg_rating: 4.2,
+        review_count: 65
     },
     {
         id: 'st-francis-xavier-church',
@@ -124,16 +176,9 @@ export const locations: LocationUI[] = [
         name: 'St. Francis Xavier Church',
         description: '19th-century Gothic-style church',
         imageUrl: 'https://res.klook.com/image/upload/fl_lossy.progressive,w_432,h_288,c_fill,q_85/activities/6bac3ac9-.jpg',
-        category: 'Attraction'
-    },
-    {
-        id: 'melaka-zoo',
-        lng: 102.3167,
-        lat: 2.2667,
-        name: 'Melaka Zoo',
-        description: 'Second largest zoo in Malaysia',
-        imageUrl: '/images/melaka-zoo.jpg',
-        category: 'Attraction'
+        category: 'Heritage',
+        avg_rating: 4.4,
+        review_count: 72
     },
     {
         id: 'klebang-beach',
@@ -142,7 +187,9 @@ export const locations: LocationUI[] = [
         name: 'Klebang Beach',
         description: 'Popular beach with coconut shake stalls',
         imageUrl: 'https://live.staticflickr.com/3317/5817241491_d935dc0d9a_b.jpg',
-        category: 'Attraction'
+        category: 'Attraction',
+        avg_rating: 4.0,
+        review_count: 110
     },
     {
         id: 'melaka-bird-park',
@@ -214,7 +261,9 @@ export const locations: LocationUI[] = [
         name: 'Universiti Teknologi Malaysia (UTeM)',
         description: 'Universiti Teknologi Malaysia is a university in Melaka',
         imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ84xIQDV6HplnQIi_ZaJ0bexbPdRBAxtU5CQ&s',
-        category: 'University'
+        category: 'University',
+        avg_rating: 4.3,
+        review_count: 75
     },
     {
         id: 'universiti-teknologi-mara-jasin',
@@ -250,7 +299,9 @@ export const locations: LocationUI[] = [
         name: 'Dutch Square (Red Square) Melaka',
         description: 'Dutch Square Melaka is a heritage site in Melaka',
         imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Malacca_stadhuys1.jpg/960px-Malacca_stadhuys1.jpg',
-        category: 'Heritage'
+        category: 'Heritage',
+        avg_rating: 4.7,
+        review_count: 250
     },
     {
         id: 'a_famosa',
@@ -259,7 +310,9 @@ export const locations: LocationUI[] = [
         name: 'A Famosa',
         description: 'A Famosa is a heritage site in Melaka',
         imageUrl: 'https://onalulu.com/wp-content/uploads/2023/10/A-Famosa.jpg',
-        category: 'Heritage'
+        category: 'Heritage',
+        avg_rating: 4.5,
+        review_count: 220
     },
     {
         id: 'baba_nyonya_heritage_museum',
@@ -268,17 +321,21 @@ export const locations: LocationUI[] = [
         name: 'Baba & Nyonya Heritage Museum',
         description: 'Baba & Nyonya Heritage Museum is a heritage site in Melaka',
         imageUrl: 'https://www.babanyonyamuseum.com/wp-content/uploads/2024/07/home-facade-cropped.webp',
-        category: 'Heritage'
+        category: 'Heritage',
+        avg_rating: 4.6,
+        review_count: 130
     },
 ]
 
-// Add this helper function to your data.tsx file
+// Category emoji mapping function
 export const getCategoryEmoji = (category?: string): string => {
     switch (category?.toLowerCase()) {
       case 'shopping':
         return '🛍️';
       case 'attraction':
         return '🎡';
+      case 'heritage':
+        return '🏛️';
       case 'temple':
         return '🛕';
       case 'mosque':
